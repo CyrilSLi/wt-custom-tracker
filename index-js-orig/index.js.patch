@@ -1,0 +1,181 @@
+--- index-js-orig/index-orig.js	2026-05-12 12:48:48.037892763 -0500
++++ index-js-orig/index-patched.js	2026-05-12 16:40:48.806443702 -0500
+@@ -87240,10 +87240,63 @@
+                                 d.request_content_type = m.get("Content-Type"),
+                                 t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
+                             }
++                            let fetchResult;
++                            if (r.url === "https://winnipegtransit.com/api/v2/routes/CUSTOMTRACKER") {
++                                fetchResult = Promise.resolve(new Response(JSON.stringify({
++                                    "owsType": "route",
++                                    "type": "rapid_transit",
++                                    "id": "CUSTOMTRACKER",
++                                    "name": "Custom Tracker",
++                                    "label": "Custom Tracker",
++                                    "badgeLabel": "C",
++                                    "badgeStyle": {
++                                        "classNames": [
++                                        "badge-label",
++                                        "blue"
++                                        ],
++                                        "backgroundColor": "#000000",
++                                        "borderColor": "#000000",
++                                        "color": "#ffffff"
++                                    },
++                                    "variants": [],
++                                    "bounds": [],
++                                    "serviceRanges": {},
++                                }), {
++                                    status: 200,
++                                    headers: { 'Content-Type': 'application/json' }
++                                }));
++                            } else if (r.url === "https://winnipegtransit.com/api/v2/map_data/routes/CUSTOMTRACKER/true") {
++                                fetchResult = Promise.resolve(new Response(JSON.stringify({
++                                    "is_on_request": false,
++                                    "key": "CUSTOMTRACKER",
++                                    "type": "rapid transit",
++                                    "badge_label": "C",
++                                    "badge_style": {
++                                        "background_color": "#000000",
++                                        "border_color": "#000000",
++                                        "color": "#ffffff"
++                                    },
++                                    "stops": [],
++                                    "variants": {
++                                        "CUSTOMTRACKER": {
++                                            "paths": [
++                                                "o~knHntdqQ",
++                                                "_sdpHnpvnQ"
++                                            ],
++                                            "stops": []
++                                        }
++                                    }
++                                }), {
++                                    status: 200,
++                                    headers: { 'Content-Type': 'application/json' }
++                                }));
++                            } else {
++                                fetchResult = e.apply(this,s);
++                            }
+                             return t.autoInstrument.networkRequestBody && (s[1] && s[1].body ? d.request = s[1].body : s[0] && !n.isType(s[0], "string") && s[0].body && (d.request = s[0].body)),
+                             t.captureNetwork(d, "fetch", void 0),
+                             t.trackHttpErrors() && (d.stack = (new Error).stack),
+-                            e.apply(this, s).then((function(e) {
++                            fetchResult.then((function(e) {
+                                 d.end_time_ms = n.now(),
+                                 d.status_code = e.status,
+                                 d.response_content_type = e.headers.get("Content-Type");
+@@ -240484,14 +240537,14 @@
+             const c = "\n      background-color: ".concat(n || "#ffffff", ";\n      border-color: ").concat(A || "#d9d9d9", ";\n      border-width: 1px;\n      border-style: solid;\n      border-radius: 4px;\n    ");
+             return "\n      <div style=\"font-weight: 700;\n                  font-family: 'Source Sans 3', 'sans-serif';\n                  text-align: center;\n                  color: ".concat(e || "#000000", ";\n                  padding: ").concat(o ? 0 : 5, "px;\n                  font-size: 15px;\n                  min-width: ").concat(o ? 15 : 18, "px;\n                  min-height: ").concat(o ? 15 : 18, "px;\n                  line-height: ").concat(o ? 16 : 18, "px;\n                  ").concat(o ? "" : c, '"\n      >\n        ').concat(t, "\n      </div>\n    ")
+         }
+-        static createBusMarker({busId: t, tripId: n, routeId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: l, inService: h, busMarkerData: p, expectedBus: u}) {
++        static createBusMarker({busId: t, tripId: n, routeId: A, runId: r, position: e, ColorCodes: o, lastUpdated: s, isLive: l, inService: h, busMarkerData: p, expectedBus: u}) {
+             const x = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
+             let w = !1
+               , E = !1;
+             u && (w = u.tripId !== n && u.route.id !== A,
+             E = u.route.badgeStyle.backgroundColor === p.badgeStyle.backgroundColor);
+             const f = "\n      <div style=\"\n         bottom: 1px;\n         left: 1px;\n         position: absolute;\n         height: 30px;\n         font-size: 11px;\n         font-weight: 700;\n         font-family: 'Source Sans 3', 'sans-serif';\n         border-radius: 24px;\n         text-align: center;\n         margin: 0;\n         padding: 0\"\n      >\n        <div style=\"\n          display: flex; flex-direction: row; flex: 0; min-height: 30px; max-height: 30px;\n          margin: 0; padding: 0; border-radius: 24px; ".concat(x, '"\n        >\n          <div style="\n            color: ').concat(p.badgeStyle.color, ";\n            background: ").concat(p.badgeStyle.backgroundColor, ";\n            border-radius: ").concat(w ? "24px 0 0 24px" : "24px", ";\n            padding: ").concat(w ? "4px 4px 4px 4px" : "4px 8px 4px 4px", ';\n            display: flex; flex-direction: row; flex-basis: auto; \n            max-height: 22px;"\n          >     \n            <div style="display: flex; flex-direction: row; flex: 0; margin: auto 4px auto 4px; padding: 0; font-size: 13px;">\n              ').concat(this._busMarkerSVG(p.badgeStyle.color), '\n            </div>\n            \n            <div style="\n              display: flex; flex-direction: row; flex: 0; margin: auto 0 auto 4px; \n              padding: 0; max-height: 18px;"\n            >\n              ').concat(h ? this.createRouteMarkerIcon({
+-                badgeLabel: p.badgeLabel,
++                badgeLabel: `${r.replaceAll("-", "\u2011")}&nbsp;(${t})`,
+                 backgroundColor: p.badgeStyle.backgroundColor,
+                 borderColor: p.badgeStyle.color,
+                 color: p.badgeStyle.color,
+@@ -240523,7 +240576,7 @@
+                 markerHTML: f
+             }
+         }
+-        static createSelectedBusMarker({busId: t, tripId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: h, inService: p, route: u, variant: x, busFeatures: w, locale: E="en", hourStyle: f="12", busMarkerData: B, expectedBus: C, busScheduledStopTime: M}) {
++        static createSelectedBusMarker({busId: t, tripId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: h, inService: p, route: u, runId: r, variant: x, busFeatures: w, locale: E="en", hourStyle: f="12", busMarkerData: B, expectedBus: C, busScheduledStopTime: M}) {
+             const U = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
+             let v = !!C && C.tripId !== A;
+             const S = (t, n=!1) => "\n        <div style=\"\n          bottom: 1px;\n          left: 1px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ".concat(B.badgeStyle.color, ";\n          background: ").concat(B.badgeStyle.backgroundColor, ";\n          border-radius: 24px;\n          padding: 9px;\n          z-index: ").concat(t, ";\n          ").concat(n ? U : "", '; \n          "\n        >\n          <div style="display: flex; flex-direction: row; flex: 0; margin: auto; padding: 0; font-size: 13px;">\n            ').concat(this._busMarkerSVG(B.badgeStyle.color), "\n          </div>\n        </div>\n      ")
+@@ -240542,7 +240595,7 @@
+             }
+             )(), "\n            \n            \x3c!--  Bus features section  --\x3e\n            ").concat(this._busMarkerFeaturesHTMLString(Object.assign({}, w, {
+                 fillColor: o.textPrimary
+-            })), '\n          </div>\n          \n          \x3c!--  Last updated section  --\x3e\n          <div style="display: flex; flex-direction: row; flex: 1; flex-wrap: nowrap; align-items: center; justify-content: flex-start; margin-top: 8px;">\n            ').concat(this._busMarkerLastUpdatedHTMLString({
++            })), '\n          </div>\n          \n          \x3c!--  Last updated section  --\x3e\n          <div style="display: flex; flex-direction: column; flex: 1; flex-wrap: nowrap; align-items: center; justify-content: flex-start;">\n            ').concat(`<a href="https://cyrilsli.github.io/wtlive_run_redirect.html?run=${r}" target="_blank">Show ${r} on WTLive</a>`, this._busMarkerLastUpdatedHTMLString({
+                 lastUpdated: s,
+                 locale: E,
+                 hourStyle: f,
+@@ -245612,6 +245665,7 @@
+                     busId: s,
+                     tripId: i.tripId,
+                     routeId: i.routeId,
++                    runId: i.runId,
+                     position: i.positions[0].position,
+                     lastUpdated: i.updatedAt,
+                     inService: i.inService,
+@@ -245834,13 +245888,42 @@
+         l.useMemo)(( () => !o || h), [o, h]);
+         let D = (0,
+         l.useMemo)(( () => (0,
+-        t.gql)("\n        subscription VehicleUpdateSubscription($queries: [VehicleUpdateQuery]!) {\n            vehicleUpdates(queries: $queries) {\n                vehicle{key},\n                trip{key},\n                route{key},\n                variant{key},\n                path{ts,x,y},\n                deviation,\n                ts,\n            }\n        }")), [])
++        t.gql)("\n        subscription VehicleUpdateSubscription($queries: [VehicleUpdateQuery]!) {\n            vehicleUpdates(queries: $queries) {\n                vehicle{key},\n                trip{key},\n                route{key},\n                run{key},\n                variant{key},\n                path{ts,x,y},\n                deviation,\n                ts,\n            }\n        }")), [])
+           , Q = (0,
+-        l.useMemo)(( () => ({
+-            queries: j.map((t => ({
+-                [P]: t
+-            })))
+-        })), [P, j]);
++        l.useMemo)(( () => {
++            const params = new URLSearchParams(window.location.search);
++            const vehiclesParam = "show-vehicles";
++            if (window.location.pathname.startsWith("/routes/") && params.has(vehiclesParam)) {
++                const vehicles = params.get(vehiclesParam);
++                if (["", "null", "all"].includes(vehicles)) {
++                    // Route list from https://winnipegtransit.com/api/v2/routes
++                    return {"queries": [{"route":"22"},{"route":"28"},{"route":"31"},{"route":"37"},{"route":"38"},{"route":"39"},{"route":"43"},{"route":"48"},{"route":"70"},{"route":"74"},{"route":"91"},{"route":"101"},{"route":"102"},{"route":"103"},{"route":"104"},{"route":"105"},{"route":"106"},{"route":"107"},{"route":"108"},{"route":"109"},{"route":"110"},{"route":"111"},{"route":"112"},{"route":"220"},{"route":"223"},{"route":"224"},{"route":"330"},{"route":"332"},{"route":"334"},{"route":"336"},{"route":"440"},{"route":"442"},{"route":"444"},{"route":"446"},{"route":"551"},{"route":"552"},{"route":"556"},{"route":"557"},{"route":"558"},{"route":"641"},{"route":"642"},{"route":"649"},{"route":"650"},{"route":"662"},{"route":"664"},{"route":"671"},{"route":"672"},{"route":"676"},{"route":"677"},{"route":"678"},{"route":"679"},{"route":"680"},{"route":"690"},{"route":"691"},{"route":"694"},{"route":"833"},{"route":"881"},{"route":"883"},{"route":"884"},{"route":"885"},{"route":"886"},{"route":"887"},{"route":"888"},{"route":"889"},{"route":"895"},{"route":"C501"},{"route":"C551"},{"route":"D10"},{"route":"D11"},{"route":"D12"},{"route":"D13"},{"route":"D14"},{"route":"D15"},{"route":"D16"},{"route":"D17"},{"route":"D19"},{"route":"F5"},{"route":"F6"},{"route":"F7"},{"route":"F8"},{"route":"F9"},{"route":"FX2"},{"route":"FX3"},{"route":"FX4"},{"route":"I304"},{"route":"BLUE"},{"route":"W291"},{"route":"W292"},{"route":"W293"},{"route":"W294"},{"route":"W295"},{"route":"W296"},{"route":"W297"},{"route":"W298"},{"route":"W299"},{"route":"W301"},{"route":"W302"},{"route":"W303"},{"route":"W311"},{"route":"W312"},{"route":"W313"},{"route":"W321"},{"route":"W322"},{"route":"W331"},{"route":"W332"},{"route":"W341"},{"route":"W342"},{"route":"W343"},{"route":"W351"},{"route":"W352"},{"route":"W353"},{"route":"W361"},{"route":"W362"},{"route":"W371"},{"route":"W372"}]};
++                } else if (!(/^\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*$/.test(vehicles))) {
++                    alert("Invalid vehicle filter. Please enter one or more (comma-separated) vehicle numbers or ranges.");
++                    debugger;
++                    return;
++                } else {
++                    const queries = [];
++                    vehicles.split(",").forEach((el) => {
++                        if (el.includes("-")) {
++                            const [start, stop] = el.split("-").sort((a, b) => a - b);
++                            for (let vehicle = start; vehicle <= stop; vehicle++) {
++                                queries.push({ vehicle: vehicle.toString() });
++                            }
++                        } else {
++                            queries.push({ vehicle: el });
++                        }
++                    });
++                    return { queries };
++                }
++            } else {
++                return {
++                    queries: j.map((t => ({
++                        [P]: t
++                    })))
++                };
++            }
++        }), [P, j]);
+         const w = (0,
+         l.useCallback)(( ({data: t}) => {
+             const {data: s, error: u} = t || {};
+@@ -246041,10 +246124,11 @@
+         }
+         ), [H, R, O, o, Q, J, c])
+           , X = (0,
+-        t.useCallback)(( ({vehicle: t, trip: l, route: c, variant: u, ts: s, deviation: n, path: o}) => {
++        t.useCallback)(( ({vehicle: t, trip: l, route: c, variant: u, ts: n, deviation: s, run: r, path: o}) => {
+             p.current[t.key].tripId = null == l ? void 0 : l.key,
+             p.current[t.key].routeId = null == c ? void 0 : c.key,
+             p.current[t.key].variantId = null == u ? void 0 : u.key,
++            p.current[t.key].runId = null == u ? void 0 : r.key,
+             p.current[t.key].updatedAt = s,
+             p.current[t.key].deviation = n,
+             null != l && l.key && null != c && c.key ? (p.current[t.key].busMarkerData = e.current[c.key],
+@@ -362222,7 +362306,7 @@
+         var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
+         function s(n) {
+             return a * (0,
+-            t.tpmt)(---n) * Math.sin((o - n) / c)
++            t.tpmt)(--n) * Math.sin((o - n) / c)
+         }
+         return s.amplitude = function(t) {
+             return u(t, c * n)

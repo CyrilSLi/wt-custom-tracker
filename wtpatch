@@ -1,0 +1,82 @@
+#!/bin/bash
+set -euo pipefail
+
+create_patch() {
+    diff -Naur index-js-orig/index-orig.js index-js-orig/index-patched.js > index-js-orig/index.js.patch || true
+    echo "Created patch file: index-js-orig/index.js.patch"
+}
+
+apply_patch() {
+    JS_FILE="$(find . -maxdepth 1 -type f -name '*.js' | head -n1)"
+
+    if [[ -z "$JS_FILE" ]]; then
+        echo "Error: Could not find JS bundle in current directory."
+        exit 1
+    fi
+
+    echo "Found JS bundle: $JS_FILE"
+    echo "Applying patch..."
+
+    PATCHED_FILE="index-js-rebuilt/index-patched.js"
+    cp "$JS_FILE" "$PATCHED_FILE"
+
+    if patch "$PATCHED_FILE" < index-js-orig/index.js.patch; then
+        echo "Patch applied successfully."
+    else
+        echo "ERROR: Failed to apply patch, check index-js-rebuilt/index-patched.js.rej for details."
+        exit 1
+    fi
+}
+
+verify_patch() {
+    JS_FILE="$(find . -maxdepth 1 -type f -name '*.js' | head -n1)"
+
+    if [[ -z "$JS_FILE" ]]; then
+        echo "WARNING: Original JS bundle not found, skipping verification."
+    else
+        if diff -Naur index-js-orig/index-orig.js "$JS_FILE" > index-js-orig/index-orig.js.patch; then
+            echo "Original JS bundles are identical."
+            rm index-js-orig/index-orig.js.patch
+        else
+            echo "ERROR: Original JS bundle has been updated since the patch was created."
+            echo "Saved diff to index-js-orig/index-orig.js.patch for inspection."
+        fi
+    fi
+
+    if [[ ! -f "index-js-rebuilt/index-patched.js" ]]; then
+        echo "WARNING: Patched JS bundle not found, skipping verification."
+    else
+        if diff -Naur index-js-orig/index-patched.js index-js-rebuilt/index-patched.js > index-js-orig/index-patched.js.patch; then
+            echo "Patched JS bundles are identical."
+            rm index-js-orig/index-patched.js.patch
+        else
+            echo "ERROR: Patched JS bundle is different from the expected version."
+            echo "Saved diff to index-js-orig/index-patched.js.patch for inspection."
+        fi
+    fi
+}
+
+usage() {
+    cat <<EOF
+Usage:
+  $0 create - Create a patch file from the original and patched JS bundles
+  $0 apply  - Apply the patch to an original JS bundle in the current directory
+  $0 verify - Verify the integrity of the original and patched JS bundles
+EOF
+}
+
+case "${1:-}" in
+    create)
+        create_patch
+        ;;
+    apply)
+        apply_patch
+        ;;
+    verify)
+        verify_patch
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac
