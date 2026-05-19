@@ -1,5 +1,5 @@
---- index-js-orig/index-orig.js	2026-05-12 12:48:48.037892763 -0500
-+++ index-js-orig/index-patched.js	2026-05-12 16:40:48.806443702 -0500
+--- index-js-orig/index-orig.js	2026-05-19 15:35:28.235747010 -0500
++++ index-js-orig/index-patched.js	2026-05-19 15:35:43.603011674 -0500
 @@ -87240,10 +87240,63 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
@@ -65,7 +65,7 @@
                                  d.end_time_ms = n.now(),
                                  d.status_code = e.status,
                                  d.response_content_type = e.headers.get("Content-Type");
-@@ -240484,14 +240537,14 @@
+@@ -240478,14 +240531,14 @@
              const c = "\n      background-color: ".concat(n || "#ffffff", ";\n      border-color: ").concat(A || "#d9d9d9", ";\n      border-width: 1px;\n      border-style: solid;\n      border-radius: 4px;\n    ");
              return "\n      <div style=\"font-weight: 700;\n                  font-family: 'Source Sans 3', 'sans-serif';\n                  text-align: center;\n                  color: ".concat(e || "#000000", ";\n                  padding: ").concat(o ? 0 : 5, "px;\n                  font-size: 15px;\n                  min-width: ").concat(o ? 15 : 18, "px;\n                  min-height: ").concat(o ? 15 : 18, "px;\n                  line-height: ").concat(o ? 16 : 18, "px;\n                  ").concat(o ? "" : c, '"\n      >\n        ').concat(t, "\n      </div>\n    ")
          }
@@ -82,7 +82,7 @@
                  backgroundColor: p.badgeStyle.backgroundColor,
                  borderColor: p.badgeStyle.color,
                  color: p.badgeStyle.color,
-@@ -240523,7 +240576,7 @@
+@@ -240517,7 +240570,7 @@
                  markerHTML: f
              }
          }
@@ -91,7 +91,7 @@
              const U = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
              let v = !!C && C.tripId !== A;
              const S = (t, n=!1) => "\n        <div style=\"\n          bottom: 1px;\n          left: 1px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ".concat(B.badgeStyle.color, ";\n          background: ").concat(B.badgeStyle.backgroundColor, ";\n          border-radius: 24px;\n          padding: 9px;\n          z-index: ").concat(t, ";\n          ").concat(n ? U : "", '; \n          "\n        >\n          <div style="display: flex; flex-direction: row; flex: 0; margin: auto; padding: 0; font-size: 13px;">\n            ').concat(this._busMarkerSVG(B.badgeStyle.color), "\n          </div>\n        </div>\n      ")
-@@ -240542,7 +240595,7 @@
+@@ -240536,7 +240589,7 @@
              }
              )(), "\n            \n            \x3c!--  Bus features section  --\x3e\n            ").concat(this._busMarkerFeaturesHTMLString(Object.assign({}, w, {
                  fillColor: o.textPrimary
@@ -100,7 +100,7 @@
                  lastUpdated: s,
                  locale: E,
                  hourStyle: f,
-@@ -245612,6 +245665,7 @@
+@@ -245650,6 +245703,7 @@
                      busId: s,
                      tripId: i.tripId,
                      routeId: i.routeId,
@@ -108,7 +108,7 @@
                      position: i.positions[0].position,
                      lastUpdated: i.updatedAt,
                      inService: i.inService,
-@@ -245834,13 +245888,42 @@
+@@ -245883,13 +245937,42 @@
          l.useMemo)(( () => !o || h), [o, h]);
          let D = (0,
          l.useMemo)(( () => (0,
@@ -157,7 +157,7 @@
          const w = (0,
          l.useCallback)(( ({data: t}) => {
              const {data: s, error: u} = t || {};
-@@ -246041,10 +246124,11 @@
+@@ -246091,10 +246174,11 @@
          }
          ), [H, R, O, o, Q, J, c])
            , X = (0,
@@ -170,7 +170,7 @@
              p.current[t.key].updatedAt = n,
              p.current[t.key].deviation = s,
              null != l && l.key && null != c && c.key ? (p.current[t.key].busMarkerData = e.current[c.key],
-@@ -362222,7 +362306,7 @@
+@@ -362284,7 +362368,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
