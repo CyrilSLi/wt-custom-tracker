@@ -1,5 +1,5 @@
 --- index-js-orig/index-orig.js	2026-05-19 15:35:28.235747010 -0500
-+++ index-js-orig/index-patched.js	2026-05-19 23:03:40.847016659 -0500
++++ index-js-orig/index-patched.js	2026-05-20 01:21:25.491036069 -0500
 @@ -87240,10 +87240,63 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
@@ -170,6 +170,15 @@
              p.current[t.key].updatedAt = n,
              p.current[t.key].deviation = s,
              null != l && l.key && null != c && c.key ? (p.current[t.key].busMarkerData = e.current[c.key],
+@@ -248963,7 +249047,7 @@
+         (0,
+         s.useEffect)(( () => {
+             const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
+-            e || t || n || !o || s || !0 != !(null == i || !i.scheduledStops) || (je(i.scheduledStops),
++            e || t || n || !o || s || !0 != !(null == i || !i.scheduledStops) || (je(i.scheduledStops.map((stop) => ({ ...stop, ...{ nextTripId: i.nextTripId, previousTripId: i.previousTripId }}))),
+             Te(i.nextTripId),
+             U.current = U.current + 1,
+             we(!0))
 @@ -362284,7 +362368,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
@@ -179,3 +188,19 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
+@@ -415357,10 +415441,15 @@
+                 M = "".concat(M, " (").concat(t, ")")
+             }
+         }
++        const tripScheduleLink = (tripId, linkName) => (`<a href="https://winnipegtransit.com/stops/trip/${tripId}/schedule?originStopId=${C.stopId}&date=${C.scheduledTime.split("T")[0]}&time=${C.scheduledTime.split("T")[1].slice(0, 5)}" target="_self">${linkName}</a>`);
+         return (0,
+         y.jsxs)(n.default, {
+             style: e,
+             children: [(0,
++            y.jsx)( // hi
++                "div",
++                { dangerouslySetInnerHTML: { __html: `${C.previousTripId ? tripScheduleLink(C.previousTripId, _("trips:schedule.previous_trip")) : ""} ${C.nextTripId ? tripScheduleLink(C.nextTripId, _("trips:schedule:next_trip")) : ""}` } },
++            ), (0,
+             y.jsx)(s.Text, {
+                 style: P.textMuted,
+                 children: _(h ? "onthego:destination_stop" : "onthego:next_stop")
