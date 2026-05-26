@@ -1,5 +1,5 @@
---- index-js-orig/index-orig.js	2026-05-19 15:35:28.235747010 -0500
-+++ index-js-orig/index-patched.js	2026-05-20 09:37:01.059431395 -0500
+--- index-js-orig/index-orig.js	2026-05-26 10:45:35.147805269 -0500
++++ index-js-orig/index-patched.js	2026-05-26 11:26:45.797535035 -0500
 @@ -87240,10 +87240,63 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
@@ -126,7 +126,7 @@
                      position: i.positions[0].position,
                      lastUpdated: i.updatedAt,
                      inService: i.inService,
-@@ -245883,13 +245937,42 @@
+@@ -245883,13 +245937,54 @@
          l.useMemo)(( () => !o || h), [o, h]);
          let D = (0,
          l.useMemo)(( () => (0,
@@ -140,12 +140,13 @@
 -        })), [P, j]);
 +        l.useMemo)(( () => {
 +            const params = new URLSearchParams(window.location.search);
-+            const vehiclesParam = "show-vehicles";
++            const vehiclesParam = "show-vehicles", routesParam = "show-routes";
++            // Route list from https://winnipegtransit.com/api/v2/routes
++            const queryEverything = { queries: "223,224,330,332,334,336,440,442,444,446,551,552,556,557,558,641,642,649,650,662,664,671,672,676,677,678,679,680,91,220,22,28,31,37,38,39,43,48,70,74,101,102,103,104,105,106,107,108,109,110,111,112,D10,D11,D12,D13,D14,D15,D16,D17,D19,F5,F6,F7,F8,F9,FX2,FX3,FX4,690,691,694,833,881,883,884,885,886,887,888,889,895,BLUE".split(",").map((el) => ({route: el})) };
 +            if (window.location.pathname.startsWith("/routes/") && params.has(vehiclesParam)) {
 +                const vehicles = params.get(vehiclesParam);
 +                if (["", "null", "all"].includes(vehicles)) {
-+                    // Route list from https://winnipegtransit.com/api/v2/routes
-+                    return {"queries": [{"route":"22"},{"route":"28"},{"route":"31"},{"route":"37"},{"route":"38"},{"route":"39"},{"route":"43"},{"route":"48"},{"route":"70"},{"route":"74"},{"route":"91"},{"route":"101"},{"route":"102"},{"route":"103"},{"route":"104"},{"route":"105"},{"route":"106"},{"route":"107"},{"route":"108"},{"route":"109"},{"route":"110"},{"route":"111"},{"route":"112"},{"route":"220"},{"route":"223"},{"route":"224"},{"route":"330"},{"route":"332"},{"route":"334"},{"route":"336"},{"route":"440"},{"route":"442"},{"route":"444"},{"route":"446"},{"route":"551"},{"route":"552"},{"route":"556"},{"route":"557"},{"route":"558"},{"route":"641"},{"route":"642"},{"route":"649"},{"route":"650"},{"route":"662"},{"route":"664"},{"route":"671"},{"route":"672"},{"route":"676"},{"route":"677"},{"route":"678"},{"route":"679"},{"route":"680"},{"route":"690"},{"route":"691"},{"route":"694"},{"route":"833"},{"route":"881"},{"route":"883"},{"route":"884"},{"route":"885"},{"route":"886"},{"route":"887"},{"route":"888"},{"route":"889"},{"route":"895"},{"route":"C501"},{"route":"C551"},{"route":"D10"},{"route":"D11"},{"route":"D12"},{"route":"D13"},{"route":"D14"},{"route":"D15"},{"route":"D16"},{"route":"D17"},{"route":"D19"},{"route":"F5"},{"route":"F6"},{"route":"F7"},{"route":"F8"},{"route":"F9"},{"route":"FX2"},{"route":"FX3"},{"route":"FX4"},{"route":"I304"},{"route":"BLUE"},{"route":"W291"},{"route":"W292"},{"route":"W293"},{"route":"W294"},{"route":"W295"},{"route":"W296"},{"route":"W297"},{"route":"W298"},{"route":"W299"},{"route":"W301"},{"route":"W302"},{"route":"W303"},{"route":"W311"},{"route":"W312"},{"route":"W313"},{"route":"W321"},{"route":"W322"},{"route":"W331"},{"route":"W332"},{"route":"W341"},{"route":"W342"},{"route":"W343"},{"route":"W351"},{"route":"W352"},{"route":"W353"},{"route":"W361"},{"route":"W362"},{"route":"W371"},{"route":"W372"}]};
++                    return queryEverything;
 +                } else if (!(/^\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*$/.test(vehicles))) {
 +                    alert("Invalid vehicle filter. Please enter one or more (comma-separated) vehicle numbers or ranges.");
 +                    debugger;
@@ -164,6 +165,17 @@
 +                    });
 +                    return { queries };
 +                }
++            } else if (window.location.pathname.startsWith("/routes/") && params.has(routesParam)) {
++                const routes = params.get(routesParam);
++                if (["", "null", "all"].includes(routes)) {
++                    return queryEverything;
++                } else if (!(/^[A-Z0-9]+(?:,[A-Z0-9]+)*$/.test(routes))) {
++                    alert("Invalid route filter. Please enter one or more (comma-separated) route numbers.");
++                    debugger;
++                    return;
++                } else {
++                    return { queries: routes.split(",").map((el) => ({route: el})) }
++                }
 +            } else {
 +                return {
 +                    queries: j.map((t => ({
@@ -175,7 +187,7 @@
          const w = (0,
          l.useCallback)(( ({data: t}) => {
              const {data: s, error: u} = t || {};
-@@ -246091,10 +246174,11 @@
+@@ -246091,10 +246186,11 @@
          }
          ), [H, R, O, o, Q, J, c])
            , X = (0,
@@ -188,7 +200,7 @@
              p.current[t.key].updatedAt = n,
              p.current[t.key].deviation = s,
              null != l && l.key && null != c && c.key ? (p.current[t.key].busMarkerData = e.current[c.key],
-@@ -248963,7 +249047,7 @@
+@@ -248963,7 +249059,7 @@
          (0,
          s.useEffect)(( () => {
              const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
@@ -197,7 +209,7 @@
              Te(i.nextTripId),
              U.current = U.current + 1,
              we(!0))
-@@ -362284,7 +362368,7 @@
+@@ -362284,7 +362380,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
@@ -206,7 +218,7 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
-@@ -415357,10 +415441,16 @@
+@@ -415357,10 +415453,16 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
          }
