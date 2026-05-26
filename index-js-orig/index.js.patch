@@ -1,5 +1,5 @@
 --- index-js-orig/index-orig.js	2026-05-26 10:45:35.147805269 -0500
-+++ index-js-orig/index-patched.js	2026-05-26 11:32:39.561441895 -0500
++++ index-js-orig/index-patched.js	2026-05-26 18:26:28.417360344 -0500
 @@ -87240,10 +87240,63 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
@@ -218,6 +218,15 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
+@@ -415108,7 +415204,7 @@
+                     children: e
+                 })
+             }
+-            if (z && O) {
++            if (true) {
+                 var de, ue;
+                 let t;
+                 q.length > 0 && (t = q[q.length - 1]);
 @@ -415357,10 +415453,16 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
