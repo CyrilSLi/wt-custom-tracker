@@ -1,5 +1,5 @@
 --- index-js-orig/index-orig.js	2026-05-26 10:45:35.147805269 -0500
-+++ index-js-orig/index-patched.js	2026-05-26 11:26:45.797535035 -0500
++++ index-js-orig/index-patched.js	2026-05-26 11:32:39.561441895 -0500
 @@ -87240,10 +87240,63 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
@@ -169,12 +169,12 @@
 +                const routes = params.get(routesParam);
 +                if (["", "null", "all"].includes(routes)) {
 +                    return queryEverything;
-+                } else if (!(/^[A-Z0-9]+(?:,[A-Z0-9]+)*$/.test(routes))) {
++                } else if (!(/^[A-Za-z0-9]+(?:,[A-Za-z0-9]+)*$/.test(routes))) {
 +                    alert("Invalid route filter. Please enter one or more (comma-separated) route numbers.");
 +                    debugger;
 +                    return;
 +                } else {
-+                    return { queries: routes.split(",").map((el) => ({route: el})) }
++                    return { queries: routes.split(",").map((el) => ({ route: el.toUpperCase() })) }
 +                }
 +            } else {
 +                return {
