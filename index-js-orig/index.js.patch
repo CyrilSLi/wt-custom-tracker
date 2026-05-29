@@ -1,6 +1,32 @@
---- index-js-orig/index-orig.js	2026-05-28 21:15:06.139573229 -0500
-+++ index-js-orig/index-patched.js	2026-05-28 21:20:52.577677182 -0500
-@@ -87279,10 +87279,83 @@
+--- index-js-orig/index-orig.js	2026-05-29 00:11:44.840338406 -0500
++++ index-js-orig/index-patched.js	2026-05-29 00:10:11.136485444 -0500
+@@ -1,3 +1,25 @@
++window.customTrackerSidebarButtonStyle = "display:inline-block; font-size: 20px; font-family: sans-serif; padding: 5px; margin: 5px; font-weight: bold; color: blue; background-color: white; border-radius: 5px;";
++function calculateCustomStopSchedule(orig) {
++    const params = new URLSearchParams(window.location.search);
++    if (params.get("custom-stop-schedule")) {
++        const date = new Date();
++        date.setHours(3, 0, 0, 0);
++        if (params.get("custom-stop-schedule") === "saturday") {
++            date.setDate(date.getDate() + ((13 - date.getDay()) % 7 || 7));
++            return date;
++        } else if (params.get("custom-stop-schedule") === "sunday") {
++            date.setDate(date.getDate() + ((7 - date.getDay()) % 7 || 7));
++            return date;
++        } else if (params.get("custom-stop-schedule") === "weekday") {
++            date.setDate(date.getDate() + 1);
++            while (date.getDay() === 0 || date.getDay() === 6) {
++                date.setDate(date.getDate() + 1);
++            }
++            return date;
++        }
++    }
++    return orig;
++}
+ var __BUNDLE_START_TIME__ = globalThis.nativePerformanceNow ? nativePerformanceNow() : Date.now()
+   , __DEV__ = false
+   , process = globalThis.process || {}
+@@ -87279,10 +87301,83 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
                              }
@@ -85,7 +111,7 @@
                                  d.end_time_ms = n.now(),
                                  d.status_code = e.status,
                                  d.response_content_type = e.headers.get("Content-Type");
-@@ -161741,7 +161814,7 @@
+@@ -161741,7 +161836,7 @@
          u.default)().add(15, "minutes");
          d.locale(o),
          d.isBefore(f) ? c.visual = (0,
@@ -94,7 +120,7 @@
          u.default)()) ? c.visual = (0,
          l.t)("common:time.due") : n && d.isBefore(p) ? c.visual = d.toNow(!0) : c.visual = d.format(s.DATE_TIME_FORMATS[o][a].time);
          let y = new RegExp((0,
-@@ -161749,7 +161822,7 @@
+@@ -161749,7 +161844,7 @@
            , b = new RegExp((0,
          l.t)("common:time.due"),"gi")
            , v = new RegExp((0,
@@ -103,7 +129,7 @@
          return c.visual.match(y) ? c.a11y = (0,
          l.t)("stops:schedules.departs_in", {
              time: c.visual
-@@ -240412,14 +240485,14 @@
+@@ -240412,14 +240507,14 @@
              const c = "\n      background-color: ".concat(n || "#ffffff", ";\n      border-color: ").concat(A || "#d9d9d9", ";\n      border-width: 1px;\n      border-style: solid;\n      border-radius: 4px;\n    ");
              return "\n      <div style=\"font-weight: 700;\n                  font-family: 'Source Sans 3', 'sans-serif';\n                  text-align: center;\n                  color: ".concat(e || "#000000", ";\n                  padding: ").concat(o ? 0 : 5, "px;\n                  font-size: 15px;\n                  min-width: ").concat(o ? 15 : 18, "px;\n                  min-height: ").concat(o ? 15 : 18, "px;\n                  line-height: ").concat(o ? 16 : 18, "px;\n                  ").concat(o ? "" : c, '"\n      >\n        ').concat(t, "\n      </div>\n    ")
          }
@@ -120,7 +146,7 @@
                  backgroundColor: p.badgeStyle.backgroundColor,
                  borderColor: p.badgeStyle.color,
                  color: p.badgeStyle.color,
-@@ -240451,7 +240524,7 @@
+@@ -240451,7 +240546,7 @@
                  markerHTML: f
              }
          }
@@ -129,7 +155,7 @@
              const U = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
              let v = !!C && C.tripId !== A;
              const S = (t, n=!1) => "\n        <div style=\"\n          bottom: 1px;\n          left: 1px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ".concat(B.badgeStyle.color, ";\n          background: ").concat(B.badgeStyle.backgroundColor, ";\n          border-radius: 24px;\n          padding: 9px;\n          z-index: ").concat(t, ";\n          ").concat(n ? U : "", '; \n          "\n        >\n          <div style="display: flex; flex-direction: row; flex: 0; margin: auto; padding: 0; font-size: 13px;">\n            ').concat(this._busMarkerSVG(B.badgeStyle.color), "\n          </div>\n        </div>\n      ")
-@@ -240470,7 +240543,7 @@
+@@ -240470,7 +240565,7 @@
              }
              )(), "\n            \n            \x3c!--  Bus features section  --\x3e\n            ").concat(this._busMarkerFeaturesHTMLString(Object.assign({}, w, {
                  fillColor: o.textPrimary
@@ -138,7 +164,7 @@
                  lastUpdated: s,
                  locale: E,
                  hourStyle: f,
-@@ -245638,12 +245711,20 @@
+@@ -245638,12 +245733,20 @@
                      busId: s,
                      tripId: c.tripId,
                      routeId: c.routeId,
@@ -159,7 +185,7 @@
                  U(s, c, l),
                  u = s === y ? R(c, l) : n.MarkersService.createBusMarker(l),
                  e.push(u)
-@@ -245707,13 +245788,54 @@
+@@ -245707,13 +245810,54 @@
          l.useMemo)(( () => !p || v), [p, v]);
          let Q = (0,
          l.useMemo)(( () => (0,
@@ -220,7 +246,7 @@
          const z = (0,
          l.useCallback)(( ({data: t}) => {
              const {data: s, error: u} = t || {};
-@@ -245975,10 +246097,11 @@
+@@ -245975,10 +246119,11 @@
          }
          ), [N, T, P, f, W, K, s])
            , Y = (0,
@@ -233,7 +259,16 @@
              y.current[e.key].updatedAt = n,
              y.current[e.key].deviation = s,
              null != t && t.key && null != l && l.key ? (y.current[e.key].busMarkerData = c.current[l.key],
-@@ -249095,7 +249218,7 @@
+@@ -246989,7 +247134,7 @@
+           , $ = (0,
+         u.useQuery)(["stopRoutes", _, Z, L], ( () => (0,
+         n.routes)(_, K && L === T.schedule ? {
+-            filter_or_time: Z
++            filter_or_time: calculateCustomStopSchedule(Z).toISOString()
+         } : {})), {
+             enabled: !!z.data
+         })
+@@ -249095,7 +249240,7 @@
          (0,
          s.useEffect)(( () => {
              const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
@@ -242,7 +277,69 @@
              Te(i.nextTripId),
              U.current = U.current + 1,
              we(!0))
-@@ -361362,7 +361485,7 @@
+@@ -355184,8 +355329,8 @@
+       , V = r(d[35])
+       , z = r(d[36])
+       , W = r(d[37]);
+-    const q = (e, t) => (t.hasOwnProperty("start_time") && t.start_time || (t.start_time = (0,
+-    o.default)().subtract(2, "minutes").toISOString()),
++    const q = (e, t) => (t.hasOwnProperty("start_time") && t.start_time || (t.start_time = calculateCustomStopSchedule((0,
++    o.default)().subtract(2, "minutes")).toISOString()),
+     (0,
+     f.schedule)(e, t))
+       , K = () => {
+@@ -355217,14 +355362,14 @@
+         S.useInfiniteQuery)(["stopSchedule", n, w], ( ({pageParam: e}) => q(n, {
+             start_time: e
+         })), {
+-            initialPageParam: w.start_time,
++            initialPageParam: calculateCustomStopSchedule(w.start_time),
+             getNextPageParam: (e, t) => ( (e, t, s) => {
+                 let l;
+                 return Array.isArray(null == e ? void 0 : e.schedule) && e.schedule.length > 0 ? l = (0,
+                 o.default)(e.schedule[e.schedule.length - 1].estimatedTime).add(1, "second").toDate().toISOString() : null != e && e.nextEstimatedStartsAt && (l = e.nextEstimatedStartsAt),
+                 l && (0,
+                 o.default)(l).isBefore((0,
+-                o.default)(s).add(A.SCHEDULE_INFINITE_HOUR_LIMIT, "hours")) ? l : void 0
++                o.default)(calculateCustomStopSchedule(s)).add(A.SCHEDULE_INFINITE_HOUR_LIMIT, "hours")) ? l : void 0
+             }
+             )(e, 0, C)
+         })
+@@ -355375,7 +355520,11 @@
+                     setForceOpenTimepicker: L,
+                     endOfBookingReachedError: h,
+                     isInitialBusSyncRef: l
+-                })]
++                }), (0,
++                W.jsx)(
++                    "div",
++                    { dangerouslySetInnerHTML: { __html: [["weekday", "Wkday"], ["saturday", "Sat"], ["sunday", "Sun"], ["", "Reset"]].map((btn) => `<a style="${window.customTrackerSidebarButtonStyle}" href="javascript:(()=>{const params = new URL(window.location.href).searchParams; '${btn[0]}' ? params.set('custom-stop-schedule', '${btn[0]}') : params.delete('custom-stop-schedule'); window.location.search = params.toString();})();">${btn[1]}</a>`).join("") + "<br> <br>" } }
++                )]
+             })
+         }
+     }
+@@ -355625,7 +355774,7 @@
+         const u = 0 === t ? J : s.default.Fragment;
+         let p = () => (0,
+         W.jsx)(W.Fragment, {});
+-        if (0 === t) {
++        if (0 === t && !(new URLSearchParams(window.location.search).has("custom-stop-schedule"))) {
+             (i ? (0,
+             o.default)() : (0,
+             o.default)(c)).add(1, "hour").isSameOrBefore((0,
+@@ -356548,9 +356697,9 @@
+         T.jsx)(o.TimeFilterChip, {
+             alignment: s.MODAL_ALIGNMENT.topLeft,
+             timeFilterNow: p,
+-            timeFilterTime: _,
++            timeFilterTime: calculateCustomStopSchedule(_),
+             setTimeFilterTime: f,
+-            timeFilterText: b,
++            timeFilterText: new URLSearchParams(window.location.search).has("custom-stop-schedule") ? () => `Next ${new URLSearchParams(window.location.search).get("custom-stop-schedule")}` : b,
+             setTimeFilterToNow: y,
+             a11yLabel: N,
+             closeA11yLabel: x,
+@@ -361362,7 +361511,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
@@ -251,7 +348,7 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
-@@ -414109,7 +414232,7 @@
+@@ -414109,7 +414258,7 @@
                      children: e
                  })
              }
@@ -260,19 +357,18 @@
                  var de, ue;
                  let t;
                  q.length > 0 && (t = q[q.length - 1]);
-@@ -414358,10 +414481,16 @@
+@@ -414358,10 +414507,15 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
          }
-+        const tripScheduleLinkStyle = "display:inline-block; font-size: 20px; font-family: sans-serif; padding: 5px; margin: 5px; font-weight: bold; color: blue; background-color: white; border-radius: 5px;";
-+        const tripScheduleLink = (tripId, linkName) => (`<a style="${tripScheduleLinkStyle}" href="https://winnipegtransit.com/stops/trip/${tripId}/schedule?originStopId=${C.stopId}&date=${C.scheduledTime.split("T")[0]}&time=${C.scheduledTime.split("T")[1].slice(0, 5)}" target="_self">${linkName}</a>`);
++        const tripScheduleLink = (tripId, linkName) => (`<a style="${window.customTrackerSidebarButtonStyle}" href="https://winnipegtransit.com/stops/trip/${tripId}/schedule?originStopId=${C.stopId}&date=${C.scheduledTime.split("T")[0]}&time=${C.scheduledTime.split("T")[1].slice(0, 5)}" target="_self">${linkName}</a>`);
          return (0,
          y.jsxs)(n.default, {
              style: e,
              children: [(0,
-+            y.jsx)( // hi
++            y.jsx)(
 +                "div",
-+                { dangerouslySetInnerHTML: { __html: `${C.previousTripId ? tripScheduleLink(C.previousTripId, _("trips:schedule.previous_trip")) : ""} ${C.nextTripId ? tripScheduleLink(C.nextTripId, _("trips:schedule:next_trip")) : ""}` } },
++                { dangerouslySetInnerHTML: { __html: `${C.previousTripId ? tripScheduleLink(C.previousTripId, _("trips:schedule.previous_trip")) : ""} ${C.nextTripId ? tripScheduleLink(C.nextTripId, _("trips:schedule:next_trip")) : ""}` } }
 +            ), (0,
              y.jsx)(s.Text, {
                  style: P.textMuted,
