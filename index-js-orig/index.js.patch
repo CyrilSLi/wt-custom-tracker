@@ -1,6 +1,6 @@
 --- index-js-orig/index-orig.js	2026-05-29 00:11:44.840338406 -0500
-+++ index-js-orig/index-patched.js	2026-05-29 00:20:06.670142041 -0500
-@@ -1,3 +1,25 @@
++++ index-js-orig/index-patched.js	2026-06-08 21:58:52.454392021 -0500
+@@ -1,3 +1,35 @@
 +window.customTrackerSidebarButtonStyle = "display:inline-block; font-size: 20px; font-family: sans-serif; padding: 5px; margin: 5px; font-weight: bold; color: blue; background-color: white; border-radius: 5px;";
 +function calculateCustomStopSchedule(orig) {
 +    const params = new URLSearchParams(window.location.search);
@@ -23,10 +23,20 @@
 +    }
 +    return orig;
 +}
++function calculateCustomEarlyLateString(stopObj) {
++    const scheduledTime = Date.parse(stopObj.scheduledTime), estimatedTime = Date.parse(stopObj.estimatedTime);
++    if (estimatedTime === scheduledTime) {
++        return " (On time)";
++    } else {
++        const timeDiff = Math.round(Math.abs(estimatedTime - scheduledTime) / 1000);
++        const timePad = (num) => String(Math.floor(num)).padStart(2, "0");
++        return ` (${timePad(timeDiff / 3600)}:${timePad((timeDiff % 3600) / 60)}:${timePad(timeDiff % 60)} ${estimatedTime >= scheduledTime ? "late" : "early"})`;
++    }
++}
  var __BUNDLE_START_TIME__ = globalThis.nativePerformanceNow ? nativePerformanceNow() : Date.now()
    , __DEV__ = false
    , process = globalThis.process || {}
-@@ -87279,10 +87301,83 @@
+@@ -87279,10 +87311,83 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
                              }
@@ -111,7 +121,7 @@
                                  d.end_time_ms = n.now(),
                                  d.status_code = e.status,
                                  d.response_content_type = e.headers.get("Content-Type");
-@@ -161741,7 +161836,7 @@
+@@ -161741,7 +161846,7 @@
          u.default)().add(15, "minutes");
          d.locale(o),
          d.isBefore(f) ? c.visual = (0,
@@ -120,7 +130,7 @@
          u.default)()) ? c.visual = (0,
          l.t)("common:time.due") : n && d.isBefore(p) ? c.visual = d.toNow(!0) : c.visual = d.format(s.DATE_TIME_FORMATS[o][a].time);
          let y = new RegExp((0,
-@@ -161749,7 +161844,7 @@
+@@ -161749,7 +161854,7 @@
            , b = new RegExp((0,
          l.t)("common:time.due"),"gi")
            , v = new RegExp((0,
@@ -129,7 +139,7 @@
          return c.visual.match(y) ? c.a11y = (0,
          l.t)("stops:schedules.departs_in", {
              time: c.visual
-@@ -240412,14 +240507,14 @@
+@@ -240412,14 +240517,14 @@
              const c = "\n      background-color: ".concat(n || "#ffffff", ";\n      border-color: ").concat(A || "#d9d9d9", ";\n      border-width: 1px;\n      border-style: solid;\n      border-radius: 4px;\n    ");
              return "\n      <div style=\"font-weight: 700;\n                  font-family: 'Source Sans 3', 'sans-serif';\n                  text-align: center;\n                  color: ".concat(e || "#000000", ";\n                  padding: ").concat(o ? 0 : 5, "px;\n                  font-size: 15px;\n                  min-width: ").concat(o ? 15 : 18, "px;\n                  min-height: ").concat(o ? 15 : 18, "px;\n                  line-height: ").concat(o ? 16 : 18, "px;\n                  ").concat(o ? "" : c, '"\n      >\n        ').concat(t, "\n      </div>\n    ")
          }
@@ -146,7 +156,7 @@
                  backgroundColor: p.badgeStyle.backgroundColor,
                  borderColor: p.badgeStyle.color,
                  color: p.badgeStyle.color,
-@@ -240451,7 +240546,7 @@
+@@ -240451,11 +240556,11 @@
                  markerHTML: f
              }
          }
@@ -155,7 +165,12 @@
              const U = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
              let v = !!C && C.tripId !== A;
              const S = (t, n=!1) => "\n        <div style=\"\n          bottom: 1px;\n          left: 1px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ".concat(B.badgeStyle.color, ";\n          background: ").concat(B.badgeStyle.backgroundColor, ";\n          border-radius: 24px;\n          padding: 9px;\n          z-index: ").concat(t, ";\n          ").concat(n ? U : "", '; \n          "\n        >\n          <div style="display: flex; flex-direction: row; flex: 0; margin: auto; padding: 0; font-size: 13px;">\n            ').concat(this._busMarkerSVG(B.badgeStyle.color), "\n          </div>\n        </div>\n      ")
-@@ -240470,7 +240565,7 @@
+-              , I = "\n      <div>\n        \x3c!-- This icon sits under the main icon and content to make it appear like there is a \n        smooth box shadow on everything without it overlapping onto the main content --\x3e\n        ".concat(S(1, !0), "\n        ").concat(S(3), "\n          \n        <div style=\"\n          width: 160px;\n          bottom: 15px;\n          left: 15px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ").concat(o.textPrimary, ";\n          background: ").concat(o.backgroundColor, ";\n          border-radius: 24px 24px 24px 0;\n          border: 2px solid ").concat(B.badgeStyle.backgroundColor, ";\n          text-align: left;\n          margin: 0;\n          padding: 10px 8px 10px 8px;\n          z-index: 2;\n          ").concat(U, ';"\n        >\n          \x3c!--  Bus number section  --\x3e\n          ').concat(this._busMarkerHeaderHTMLString(t), "\n          \n          \x3c!--  Current bus route/variant section  --\x3e\n          ").concat(p ? this._busMarkerRouteHTMLString({
++              , I = "\n      <div>\n        \x3c!-- This icon sits under the main icon and content to make it appear like there is a \n        smooth box shadow on everything without it overlapping onto the main content --\x3e\n        ".concat(S(1, !0), "\n        ").concat(S(3), "\n          \n        <div style=\"\n          width: 160px;\n          bottom: 15px;\n          left: 15px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ").concat(o.textPrimary, ";\n          background: ").concat(o.backgroundColor, ";\n          border-radius: 24px 24px 24px 0;\n          border: 2px solid ").concat(B.badgeStyle.backgroundColor, ";\n          text-align: left;\n          margin: 0;\n          padding: 10px 8px 10px 8px;\n          z-index: 2;\n          ").concat(U, ';"\n        >\n          \x3c!--  Bus number section  --\x3e\n          ').concat(this._busMarkerHeaderHTMLString(t, u.scheduledStops), "\n          \n          \x3c!--  Current bus route/variant section  --\x3e\n          ").concat(p ? this._busMarkerRouteHTMLString({
+                 route: u,
+                 variant: x
+             }) : '\n        <div style="font-size: 13px; font-weight: bold; margin: 0 auto 0 auto; text-align: center;">\n          '.concat((0,
+@@ -240470,7 +240575,7 @@
              }
              )(), "\n            \n            \x3c!--  Bus features section  --\x3e\n            ").concat(this._busMarkerFeaturesHTMLString(Object.assign({}, w, {
                  fillColor: o.textPrimary
@@ -164,7 +179,38 @@
                  lastUpdated: s,
                  locale: E,
                  hourStyle: f,
-@@ -245638,12 +245733,20 @@
+@@ -240508,10 +240613,10 @@
+             o += "bus-".concat(t),
+             o
+         }
+-        static _busMarkerHeaderHTMLString(t) {
++        static _busMarkerHeaderHTMLString(t, scheduledStops) {
+             return '\n      <div style="display: flex; flex-direction: row; flex: 1; flex-wrap: wrap; margin-bottom: 8px;">\n        <p style="display: flex; flex-direction: row; flex: 1; margin: 0; padding: 0;">\n          '.concat((0,
+             A.default)((0,
+-            n.t)("common:bus")), " ").concat(t, '\n        </p>\n        \n        <p style="display: flex; flex-direction: row; flex: 0; margin: 0; padding: 0;">&#x2715;</p>\n      </div>\n    ')
++            n.t)("common:bus")), " ").concat(t + (scheduledStops == null ? "" : calculateCustomEarlyLateString(scheduledStops.find((stop) => Date.parse(stop.estimatedTime) > Date.now()) ?? scheduledStops[scheduledStops.length - 1])), '\n        </p>\n        \n        <p style="display: flex; flex-direction: row; flex: 0; margin: 0; padding: 0;">&#x2715;</p>\n      </div>\n    ')
+         }
+         static _busMarkerRouteHTMLString({route: t, variant: n}) {
+             return '\n      <div>\n        <div>\n          <div style="display: flex; flex-direction: row; flex: 1; flex-wrap: wrap; justify-content: center">\n            <div style="display: flex; flex-direction: row; flex: 0; margin: 0 8px 0 0; padding: 0; max-height: 18px;">\n              '.concat(this.createRouteMarkerIcon({
+@@ -244367,7 +244472,7 @@
+         null != o && (b.push(o),
+         _.live = o),
+         null != p && (b.push(p),
+-        _.is_bus_marker = p),
++        _.is_bus_marker = location.pathname.includes("onthego")),
+         (0,
+         t.apiRequest)("".concat(c, "/schedule?").concat((0,
+         t.buildQueryUrl)(_)), {}, b)
+@@ -245587,7 +245692,7 @@
+             return !e.inService && t.expectedBus ? (t.busFeatures = t.expectedBus.busFeatures || {},
+             t.locale = L,
+             s = n.MarkersService.createSelectedBusMarker(t)) : v ? e.tripId !== v.id ? (s = n.MarkersService.createBusMarker(t),
+-            e.tripId && e.routeId ? C(e.tripId) : V()) : (t.route = v.route,
++            e.tripId && e.routeId ? C(e.tripId) : V()) : (t.route = { ...v.route, scheduledStops: v.scheduledStops },
+             t.variant = v.variant,
+             t.busFeatures = (null == v ? void 0 : v.busFeatures) || {},
+             t.locale = L,
+@@ -245638,12 +245743,20 @@
                      busId: s,
                      tripId: c.tripId,
                      routeId: c.routeId,
@@ -185,7 +231,7 @@
                  U(s, c, l),
                  u = s === y ? R(c, l) : n.MarkersService.createBusMarker(l),
                  e.push(u)
-@@ -245707,13 +245810,54 @@
+@@ -245707,13 +245820,54 @@
          l.useMemo)(( () => !p || v), [p, v]);
          let Q = (0,
          l.useMemo)(( () => (0,
@@ -246,7 +292,7 @@
          const z = (0,
          l.useCallback)(( ({data: t}) => {
              const {data: s, error: u} = t || {};
-@@ -245975,10 +246119,11 @@
+@@ -245975,10 +246129,11 @@
          }
          ), [N, T, P, f, W, K, s])
            , Y = (0,
@@ -259,7 +305,7 @@
              y.current[e.key].updatedAt = n,
              y.current[e.key].deviation = s,
              null != t && t.key && null != l && l.key ? (y.current[e.key].busMarkerData = c.current[l.key],
-@@ -246989,7 +247134,7 @@
+@@ -246989,7 +247144,7 @@
            , $ = (0,
          u.useQuery)(["stopRoutes", _, Z, L], ( () => (0,
          n.routes)(_, K && L === T.schedule ? {
@@ -268,7 +314,16 @@
          } : {})), {
              enabled: !!z.data
          })
-@@ -249095,7 +249240,7 @@
+@@ -247624,7 +247779,7 @@
+                 prefix: "far",
+                 iconName: "clock",
+                 text: p("trips:schedule:eta", {
+-                    time: x.visual
++                    time: x.visual + calculateCustomEarlyLateString(o)
+                 }),
+                 style: u
+             })]
+@@ -249095,7 +249250,7 @@
          (0,
          s.useEffect)(( () => {
              const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
@@ -277,7 +332,7 @@
              Te(i.nextTripId),
              U.current = U.current + 1,
              we(!0))
-@@ -355184,8 +355329,8 @@
+@@ -355184,8 +355339,8 @@
        , V = r(d[35])
        , z = r(d[36])
        , W = r(d[37]);
@@ -288,7 +343,7 @@
      (0,
      f.schedule)(e, t))
        , K = () => {
-@@ -355217,14 +355362,14 @@
+@@ -355217,14 +355372,14 @@
          S.useInfiniteQuery)(["stopSchedule", n, w], ( ({pageParam: e}) => q(n, {
              start_time: e
          })), {
@@ -305,7 +360,7 @@
              }
              )(e, 0, C)
          })
-@@ -355375,7 +355520,11 @@
+@@ -355375,7 +355530,11 @@
                      setForceOpenTimepicker: L,
                      endOfBookingReachedError: h,
                      isInitialBusSyncRef: l
@@ -318,7 +373,7 @@
              })
          }
      }
-@@ -355625,7 +355774,7 @@
+@@ -355625,7 +355784,7 @@
          const u = 0 === t ? J : s.default.Fragment;
          let p = () => (0,
          W.jsx)(W.Fragment, {});
@@ -327,7 +382,7 @@
              (i ? (0,
              o.default)() : (0,
              o.default)(c)).add(1, "hour").isSameOrBefore((0,
-@@ -356548,9 +356697,9 @@
+@@ -356548,9 +356707,9 @@
          T.jsx)(o.TimeFilterChip, {
              alignment: s.MODAL_ALIGNMENT.topLeft,
              timeFilterNow: p,
@@ -339,7 +394,7 @@
              setTimeFilterToNow: y,
              a11yLabel: N,
              closeA11yLabel: x,
-@@ -361362,7 +361511,7 @@
+@@ -361362,7 +361521,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
@@ -348,7 +403,7 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
-@@ -414109,7 +414258,7 @@
+@@ -414109,7 +414268,7 @@
                      children: e
                  })
              }
@@ -357,7 +412,25 @@
                  var de, ue;
                  let t;
                  q.length > 0 && (t = q[q.length - 1]);
-@@ -414358,10 +414507,15 @@
+@@ -414326,7 +414485,7 @@
+         x.useLocaleSetting)()
+           , {tripDestination: I, upcomingScheduledStops: j} = (0,
+         t.useContext)(u.OnTheGoTripScheduleContext)
+-          , C = h ? I : j[0]
++          , C = h ? I : j.find((stop) => Date.parse(stop.estimatedTime) > Date.now()) ?? j[j.length - 1]
+           , P = o.default.create({
+             textMuted: {
+                 fontSize: 16,
+@@ -414346,7 +414505,7 @@
+             time: (0,
+             c.scheduleDepartureTime)(C.estimatedTime, {
+                 locale: b
+-            }).visual
++            }).visual + calculateCustomEarlyLateString(C)
+         });
+         if (h) {
+             const e = j.findIndex((e => e.stopId === C.stopId));
+@@ -414358,10 +414517,15 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
          }
@@ -365,11 +438,12 @@
          return (0,
          y.jsxs)(n.default, {
              style: e,
-             children: [(0,
+-            children: [(0,
++            children: [...(h ? [] : [(0,
 +            y.jsx)(
 +                "div",
 +                { dangerouslySetInnerHTML: { __html: `${C.previousTripId ? tripScheduleLink(C.previousTripId, _("trips:schedule.previous_trip")) : ""} ${C.nextTripId ? tripScheduleLink(C.nextTripId, _("trips:schedule:next_trip")) : ""}` } }
-+            ), (0,
++            )]), (0,
              y.jsx)(s.Text, {
                  style: P.textMuted,
                  children: _(h ? "onthego:destination_stop" : "onthego:next_stop")
