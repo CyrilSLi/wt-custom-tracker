@@ -1,6 +1,6 @@
 --- index-js-orig/index-orig.js	2026-05-29 00:11:44.840338406 -0500
-+++ index-js-orig/index-patched.js	2026-06-13 23:15:10.556098159 -0500
-@@ -1,3 +1,37 @@
++++ index-js-orig/index-patched.js	2026-06-14 21:07:50.563072542 -0500
+@@ -1,3 +1,46 @@
 +window.customTrackerSidebarButtonStyle = "display:inline-block; font-size: 20px; font-family: sans-serif; padding: 5px; margin: 5px; font-weight: bold; color: blue; background-color: white; border-radius: 5px;";
 +function calculateCustomStopSchedule(orig) {
 +    const params = new URLSearchParams(window.location.search);
@@ -33,12 +33,21 @@
 +        return ` (${timePad(timeDiff / 3600)}:${timePad((timeDiff % 3600) / 60)}:${timePad(timeDiff % 60)} ${estimatedTime >= scheduledTime ? "late" : "early"})`;
 +    }
 +}
++function getServiceDay(date) { // 03:00 to 02:59 service day
++    return new Intl.DateTimeFormat("en-CA", {
++        timeZone: "America/Winnipeg",
++        year: "numeric",
++        month: "2-digit",
++        day: "2-digit",
++    }).format(new Date(date.getTime() - 3 * 60 * 60 * 1000));
++}
++window.customTrackerVehicleData = {};
 +// End of custom global objects
 +
  var __BUNDLE_START_TIME__ = globalThis.nativePerformanceNow ? nativePerformanceNow() : Date.now()
    , __DEV__ = false
    , process = globalThis.process || {}
-@@ -87279,10 +87313,83 @@
+@@ -87279,10 +87322,83 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
                              }
@@ -123,7 +132,7 @@
                                  d.end_time_ms = n.now(),
                                  d.status_code = e.status,
                                  d.response_content_type = e.headers.get("Content-Type");
-@@ -161741,7 +161848,7 @@
+@@ -161741,7 +161857,7 @@
          u.default)().add(15, "minutes");
          d.locale(o),
          d.isBefore(f) ? c.visual = (0,
@@ -132,7 +141,7 @@
          u.default)()) ? c.visual = (0,
          l.t)("common:time.due") : n && d.isBefore(p) ? c.visual = d.toNow(!0) : c.visual = d.format(s.DATE_TIME_FORMATS[o][a].time);
          let y = new RegExp((0,
-@@ -161749,7 +161856,7 @@
+@@ -161749,7 +161865,7 @@
            , b = new RegExp((0,
          l.t)("common:time.due"),"gi")
            , v = new RegExp((0,
@@ -141,12 +150,20 @@
          return c.visual.match(y) ? c.a11y = (0,
          l.t)("stops:schedules.departs_in", {
              time: c.visual
-@@ -240412,14 +240519,14 @@
+@@ -240412,14 +240528,22 @@
              const c = "\n      background-color: ".concat(n || "#ffffff", ";\n      border-color: ").concat(A || "#d9d9d9", ";\n      border-width: 1px;\n      border-style: solid;\n      border-radius: 4px;\n    ");
              return "\n      <div style=\"font-weight: 700;\n                  font-family: 'Source Sans 3', 'sans-serif';\n                  text-align: center;\n                  color: ".concat(e || "#000000", ";\n                  padding: ").concat(o ? 0 : 5, "px;\n                  font-size: 15px;\n                  min-width: ").concat(o ? 15 : 18, "px;\n                  min-height: ").concat(o ? 15 : 18, "px;\n                  line-height: ").concat(o ? 16 : 18, "px;\n                  ").concat(o ? "" : c, '"\n      >\n        ').concat(t, "\n      </div>\n    ")
          }
 -        static createBusMarker({busId: t, tripId: n, routeId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: l, inService: h, busMarkerData: p, expectedBus: u}) {
 +        static createBusMarker({busId: t, tripId: n, routeId: A, runId: r, position: e, ColorCodes: o, lastUpdated: s, isLive: l, inService: h, busMarkerData: p, expectedBus: u}) {
++            if (window?.customTrackerVehicleData?.[t]?.staleLiveData) {
++                p = { ...p };
++                p.badgeStyle = {
++                    color: "#FFFFFF",
++                    backgroundColor: "#808080",
++                    borderColor: "#d9d9d9"
++                };
++            }
              const x = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
              let w = !1
                , E = !1;
@@ -158,12 +175,20 @@
                  backgroundColor: p.badgeStyle.backgroundColor,
                  borderColor: p.badgeStyle.color,
                  color: p.badgeStyle.color,
-@@ -240451,11 +240558,11 @@
+@@ -240451,11 +240575,19 @@
                  markerHTML: f
              }
          }
 -        static createSelectedBusMarker({busId: t, tripId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: h, inService: p, route: u, variant: x, busFeatures: w, locale: E="en", hourStyle: f="12", busMarkerData: B, expectedBus: C, busScheduledStopTime: M}) {
 +        static createSelectedBusMarker({busId: t, tripId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: h, inService: p, route: u, runId: r, variant: x, busFeatures: w, locale: E="en", hourStyle: f="12", busMarkerData: B, expectedBus: C, busScheduledStopTime: M}) {
++            if (window?.customTrackerVehicleData?.[t]?.staleLiveData) {
++                B = { ...B };
++                B.badgeStyle = {
++                    color: "#FFFFFF",
++                    backgroundColor: "#808080",
++                    borderColor: "#d9d9d9"
++                };
++            }
              const U = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
              let v = !!C && C.tripId !== A;
              const S = (t, n=!1) => "\n        <div style=\"\n          bottom: 1px;\n          left: 1px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ".concat(B.badgeStyle.color, ";\n          background: ").concat(B.badgeStyle.backgroundColor, ";\n          border-radius: 24px;\n          padding: 9px;\n          z-index: ").concat(t, ";\n          ").concat(n ? U : "", '; \n          "\n        >\n          <div style="display: flex; flex-direction: row; flex: 0; margin: auto; padding: 0; font-size: 13px;">\n            ').concat(this._busMarkerSVG(B.badgeStyle.color), "\n          </div>\n        </div>\n      ")
@@ -172,16 +197,22 @@
                  route: u,
                  variant: x
              }) : '\n        <div style="font-size: 13px; font-weight: bold; margin: 0 auto 0 auto; text-align: center;">\n          '.concat((0,
-@@ -240470,7 +240577,7 @@
+@@ -240470,11 +240602,12 @@
              }
              )(), "\n            \n            \x3c!--  Bus features section  --\x3e\n            ").concat(this._busMarkerFeaturesHTMLString(Object.assign({}, w, {
                  fillColor: o.textPrimary
 -            })), '\n          </div>\n          \n          \x3c!--  Last updated section  --\x3e\n          <div style="display: flex; flex-direction: row; flex: 1; flex-wrap: nowrap; align-items: center; justify-content: flex-start; margin-top: 8px;">\n            ').concat(this._busMarkerLastUpdatedHTMLString({
-+            })), '\n          </div>\n          \n          \x3c!--  Last updated section  --\x3e\n          <div style="display: flex; flex-direction: column; flex: 1; flex-wrap: nowrap; align-items: center; justify-content: flex-start;">\n            ').concat(`<a href="https://cyrilsli.github.io/wtlive_redirect.html?run=${r}" target="_blank">Show ${r} on WTLive</a> <a href="https://cyrilsli.github.io/wtlive_redirect.html?vehicle=${t}" target="_blank">WTLive Bus History</a>` + (location.pathname.includes("onthego") ? "" : `<a href="javascript:window.top.location.href = 'https://winnipegtransit.com/onthego/live?busId=${t}';" target="_self">Open On the Go</a>`), this._busMarkerLastUpdatedHTMLString({
++            })), '\n          </div>\n          \n          \x3c!--  Last updated section  --\x3e\n          <div style="display: flex; flex-direction: column; flex: 1; flex-wrap: nowrap; align-items: center; justify-content: flex-start;">\n            ').concat(`<a href="https://cyrilsli.github.io/wtlive_redirect.html?run=${r}" target="_blank">Show ${r} on WTLive</a> <a href="https://cyrilsli.github.io/wtlive_redirect.html?vehicle=${t}" target="_blank">WTLive Bus History</a>` + ((location.pathname.includes("onthego") || window?.customTrackerVehicleData?.[t]?.staleLiveData) ? "" : `<a href="javascript:window.top.location.href = 'https://winnipegtransit.com/onthego/live?busId=${t}';" target="_self">Open On the Go</a>`), this._busMarkerLastUpdatedHTMLString({
                  lastUpdated: s,
                  locale: E,
                  hourStyle: f,
-@@ -240508,10 +240615,10 @@
+-                isLive: h
++                isLive: h,
++                busId: t
+             }), "\n            ").concat(h ? "" : this._offlineWarningSVGDiv({
+                 ColorCodes: o,
+                 marginTop: "0px",
+@@ -240508,10 +240641,10 @@
              o += "bus-".concat(t),
              o
          }
@@ -194,7 +225,31 @@
          }
          static _busMarkerRouteHTMLString({route: t, variant: n}) {
              return '\n      <div>\n        <div>\n          <div style="display: flex; flex-direction: row; flex: 1; flex-wrap: wrap; justify-content: center">\n            <div style="display: flex; flex-direction: row; flex: 0; margin: 0 8px 0 0; padding: 0; max-height: 18px;">\n              '.concat(this.createRouteMarkerIcon({
-@@ -244367,7 +244474,7 @@
+@@ -240548,7 +240681,7 @@
+         static _busMarkerFeaturesHTMLString({bikeRack: t, wheelchairSecurement: n, fillColor: A}) {
+             return t || n ? "\n      <div>\n        ".concat(t ? this._bikeSVG(A) : "", "\n        ").concat(n ? this._wheelchairSecurementSVG(A) : "", "\n      </div>\n    ") : ""
+         }
+-        static _busMarkerLastUpdatedHTMLString({lastUpdated: t, locale: A="en", hourStyle: o="12", isLive: c=!0}) {
++        static _busMarkerLastUpdatedHTMLString({lastUpdated: t, locale: A="en", hourStyle: o="12", isLive: c=!0, busId: busId=Symbol()}) {
+             let l, h = Math.abs((0,
+             s.default)().diff((0,
+             s.default)(t), "minutes", !0));
+@@ -240562,10 +240695,11 @@
+                     time_in_min: t
+                 })
+             } else {
++                const staleLiveData = window?.customTrackerVehicleData?.[busId]?.staleLiveData;
+                 let c = (0,
+-                s.default)(t).format(e.DATE_TIME_FORMATS[A][o].time);
+-                l = "".concat((0,
+-                n.t)("common:last_updated"), ": ").concat(c)
++                s.default)(t).format(e.DATE_TIME_FORMATS[A][o][staleLiveData ? "month_day_time" : "time"]);
++                l = (staleLiveData ? "As of " : "".concat((0,
++                n.t)("common:last_updated"), ": ")).concat(c)
+             }
+             return '\n      <p style="font-size: 11px; margin: 0; padding: 0 4px 0 0; flex: 1 1 auto; min-width: 0; text-align: left;">'.concat(l, "</p>\n    ")
+         }
+@@ -244367,7 +244501,7 @@
          null != o && (b.push(o),
          _.live = o),
          null != p && (b.push(p),
@@ -203,7 +258,7 @@
          (0,
          t.apiRequest)("".concat(c, "/schedule?").concat((0,
          t.buildQueryUrl)(_)), {}, b)
-@@ -245587,7 +245694,7 @@
+@@ -245587,7 +245721,7 @@
              return !e.inService && t.expectedBus ? (t.busFeatures = t.expectedBus.busFeatures || {},
              t.locale = L,
              s = n.MarkersService.createSelectedBusMarker(t)) : v ? e.tripId !== v.id ? (s = n.MarkersService.createBusMarker(t),
@@ -212,7 +267,7 @@
              t.variant = v.variant,
              t.busFeatures = (null == v ? void 0 : v.busFeatures) || {},
              t.locale = L,
-@@ -245638,17 +245745,40 @@
+@@ -245638,17 +245772,51 @@
                      busId: s,
                      tripId: c.tripId,
                      routeId: c.routeId,
@@ -236,25 +291,36 @@
              }
 -            ))
 +            ));
++            if (window.location.pathname.startsWith("/onthego/") && window.customTrackerHeading) {
++                window.customTrackerHeading.textContent = oldPageHeading;
++                return;
++            }
 +            if (!document.body.contains(window.customTrackerHeading)) {
 +                window.customTrackerHeading = [...document.getElementsByTagName("h1")].find((el) => el.getBoundingClientRect().x > 0);
 +                window.customTrackerHeading.style.padding = "0";
++                window.oldPageHeading = window.customTrackerHeading.textContent;
 +            }
-+            const h1Elements = document.getElementsByTagName("h1");
-+            const numBusesWithGPS = Object.values(k.current).reduce((count, vehicle) => {
-+                const vehiclePosition = vehicle.positions[0].position;
-+                return !(
-+                    vehiclePosition.lat >= 49.781 &&
-+                    vehiclePosition.lat <= 49.83 &&
-+                    vehiclePosition.lng >= -97.32 &&
-+                    vehiclePosition.lng <= -97.2725
-+                ) ? count + 1 : count;
-+            }, 0);
-+            window.customTrackerHeading.textContent = `${Object.keys(k.current).length} bus${Object.keys(k.current).length === 1 ? "" : "es"}, ${numBusesWithGPS} GPS`;
++            let numBuses = 0, noGPSData = 0, staleLiveData = 0;
++            Object.keys(k.current).forEach((vehicle) => {
++                const customVehicleData = window.customTrackerVehicleData?.[vehicle];
++                if (!customVehicleData) {
++                    numBuses = staleLiveData = 0;
++                    return;
++                }
++                if (customVehicleData.staleLiveData) {
++                    staleLiveData++;
++                } else {
++                    numBuses++;
++                }
++                if (customVehicleData.noGPSData) {
++                    noGPSData++;
++                }
++            });
++            window.customTrackerHeading.textContent = (numBuses || staleLiveData) ? `${numBuses} active, ${staleLiveData} stale, ${noGPSData} w/o GPS` : oldPageHeading;
          }
          ), [h, y, U, A, R, w, k]);
          return {
-@@ -245707,15 +245837,65 @@
+@@ -245707,15 +245875,71 @@
          l.useMemo)(( () => !p || v), [p, v]);
          let Q = (0,
          l.useMemo)(( () => (0,
@@ -270,7 +336,7 @@
 +            const params = new URLSearchParams(window.location.search);
 +            const vehiclesParam = "show-vehicles", routesParam = "show-routes";
 +            // Route list from https://winnipegtransit.com/api/v2/routes
-+            const queryEverything = { queries: "223,224,330,332,334,336,440,442,444,446,551,552,556,557,558,641,642,649,650,662,664,671,672,676,677,678,679,680,91,220,22,28,31,37,38,39,43,48,70,74,101,102,103,104,105,106,107,108,109,110,111,112,D10,D11,D12,D13,D14,D15,D16,D17,D19,F5,F6,F7,F8,F9,FX2,FX3,FX4,690,691,694,833,881,883,884,885,886,887,888,889,895,BLUE".split(",").map((el) => ({route: el})) };
++            const queryEverything = { queries: "223,224,330,332,334,336,440,442,444,446,551,552,556,557,558,641,642,649,650,662,664,671,672,676,677,678,679,680,91,220,22,28,31,37,38,39,43,48,70,74,101,102,103,104,105,106,107,108,109,110,111,112,D10,D11,D12,D13,D14,D15,D16,D17,D19,F5,F6,F7,F8,F9,FX2,FX3,FX4,690,691,694,833,881,883,884,885,886,887,888,889,895,BLUE,D18".split(",").map((el) => ({route: el})) };
 +            if (window.location.pathname.startsWith("/routes/") && params.has(vehiclesParam)) {
 +                const vehicles = params.get(vehiclesParam);
 +                if (["", "null", "all"].includes(vehicles)) {
@@ -315,6 +381,8 @@
          const z = (0,
          l.useCallback)(( ({data: t}) => {
 +            const vehicleUpdates = t?.data?.vehicleUpdates;
++            window.customTrackerVehicleData[vehicleUpdates?.vehicle?.key] ??= {};
++            const customVehicleData = window.customTrackerVehicleData[vehicleUpdates?.vehicle?.key];
 +            if (vehicleUpdates?.vehicle?.key && vehicleUpdates?.path?.length === 0) {
 +                vehicleUpdates.path = [{
 +                    ts: new Date().toISOString(),
@@ -322,11 +390,15 @@
 +                    y: -97.32 + vehicleUpdates.vehicle.key % 20 * 0.0025,
 +                    __typename: "TimedPoint"
 +                }];
++                customVehicleData.noGPSData = true;
++            } else {
++                customVehicleData.noGPSData = false;
 +            }
++            customVehicleData.staleLiveData = vehicleUpdates?.ts && getServiceDay(new Date(vehicleUpdates.ts)) !== getServiceDay(new Date());
              const {data: s, error: u} = t || {};
              null != s && s.vehicleUpdates && !u ? (q(null),
              D(null),
-@@ -245975,10 +246155,11 @@
+@@ -245975,10 +246199,11 @@
          }
          ), [N, T, P, f, W, K, s])
            , Y = (0,
@@ -339,7 +411,7 @@
              y.current[e.key].updatedAt = n,
              y.current[e.key].deviation = s,
              null != t && t.key && null != l && l.key ? (y.current[e.key].busMarkerData = c.current[l.key],
-@@ -246008,10 +246189,6 @@
+@@ -246008,10 +246233,6 @@
              const {vehicle: t, trip: l, route: s, path: h, ts: f} = e || {};
              if (null == t || !t.key || 0 === (h || []).length || !f || !c.current.hasOwnProperty(null == s ? void 0 : s.key))
                  return;
@@ -350,7 +422,7 @@
              if (k) {
                  const e = (o || []).find(( ({id: e}) => e === t.key));
                  if (!e || e.tripId !== (null == l ? void 0 : l.key))
-@@ -246989,7 +247166,7 @@
+@@ -246989,7 +247210,7 @@
            , $ = (0,
          u.useQuery)(["stopRoutes", _, Z, L], ( () => (0,
          n.routes)(_, K && L === T.schedule ? {
@@ -359,7 +431,7 @@
          } : {})), {
              enabled: !!z.data
          })
-@@ -247624,7 +247801,7 @@
+@@ -247624,7 +247845,7 @@
                  prefix: "far",
                  iconName: "clock",
                  text: p("trips:schedule:eta", {
@@ -368,7 +440,7 @@
                  }),
                  style: u
              })]
-@@ -249095,7 +249272,7 @@
+@@ -249095,7 +249316,7 @@
          (0,
          s.useEffect)(( () => {
              const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
@@ -377,7 +449,7 @@
              Te(i.nextTripId),
              U.current = U.current + 1,
              we(!0))
-@@ -355184,8 +355361,8 @@
+@@ -355184,8 +355405,8 @@
        , V = r(d[35])
        , z = r(d[36])
        , W = r(d[37]);
@@ -388,7 +460,7 @@
      (0,
      f.schedule)(e, t))
        , K = () => {
-@@ -355217,14 +355394,14 @@
+@@ -355217,14 +355438,14 @@
          S.useInfiniteQuery)(["stopSchedule", n, w], ( ({pageParam: e}) => q(n, {
              start_time: e
          })), {
@@ -405,7 +477,7 @@
              }
              )(e, 0, C)
          })
-@@ -355375,7 +355552,11 @@
+@@ -355375,7 +355596,11 @@
                      setForceOpenTimepicker: L,
                      endOfBookingReachedError: h,
                      isInitialBusSyncRef: l
@@ -418,7 +490,7 @@
              })
          }
      }
-@@ -355625,7 +355806,7 @@
+@@ -355625,7 +355850,7 @@
          const u = 0 === t ? J : s.default.Fragment;
          let p = () => (0,
          W.jsx)(W.Fragment, {});
@@ -427,7 +499,7 @@
              (i ? (0,
              o.default)() : (0,
              o.default)(c)).add(1, "hour").isSameOrBefore((0,
-@@ -356548,9 +356729,9 @@
+@@ -356548,9 +356773,9 @@
          T.jsx)(o.TimeFilterChip, {
              alignment: s.MODAL_ALIGNMENT.topLeft,
              timeFilterNow: p,
@@ -439,7 +511,7 @@
              setTimeFilterToNow: y,
              a11yLabel: N,
              closeA11yLabel: x,
-@@ -361362,7 +361543,7 @@
+@@ -361362,7 +361587,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
@@ -448,7 +520,7 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
-@@ -414109,7 +414290,7 @@
+@@ -414109,7 +414334,7 @@
                      children: e
                  })
              }
@@ -457,7 +529,7 @@
                  var de, ue;
                  let t;
                  q.length > 0 && (t = q[q.length - 1]);
-@@ -414326,7 +414507,7 @@
+@@ -414326,7 +414551,7 @@
          x.useLocaleSetting)()
            , {tripDestination: I, upcomingScheduledStops: j} = (0,
          t.useContext)(u.OnTheGoTripScheduleContext)
@@ -466,7 +538,7 @@
            , P = o.default.create({
              textMuted: {
                  fontSize: 16,
-@@ -414346,7 +414527,7 @@
+@@ -414346,7 +414571,7 @@
              time: (0,
              c.scheduleDepartureTime)(C.estimatedTime, {
                  locale: b
@@ -475,7 +547,7 @@
          });
          if (h) {
              const e = j.findIndex((e => e.stopId === C.stopId));
-@@ -414358,10 +414539,15 @@
+@@ -414358,10 +414583,15 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
          }
