@@ -1,5 +1,5 @@
---- index-js-orig/index-orig.js	2026-06-15 10:46:26.391982515 -0500
-+++ index-js-orig/index-patched.js	2026-06-15 13:09:31.165909697 -0500
+--- index-js-orig/index-orig.js	2026-06-17 15:33:18.186092131 -0500
++++ index-js-orig/index-patched.js	2026-06-17 15:34:01.546586630 -0500
 @@ -1,3 +1,46 @@
 +window.customTrackerSidebarButtonStyle = "display:inline-block; font-size: 20px; font-family: sans-serif; padding: 5px; margin: 5px; font-weight: bold; color: blue; background-color: white; border-radius: 5px;";
 +function calculateCustomStopSchedule(orig) {
@@ -154,8 +154,8 @@
              const c = "\n      background-color: ".concat(n || "#ffffff", ";\n      border-color: ").concat(A || "#d9d9d9", ";\n      border-width: 1px;\n      border-style: solid;\n      border-radius: 4px;\n    ");
              return "\n      <div style=\"font-weight: 700;\n                  font-family: 'Source Sans 3', 'sans-serif';\n                  text-align: center;\n                  color: ".concat(e || "#000000", ";\n                  padding: ").concat(o ? 0 : 5, "px;\n                  font-size: 15px;\n                  min-width: ").concat(o ? 15 : 18, "px;\n                  min-height: ").concat(o ? 15 : 18, "px;\n                  line-height: ").concat(o ? 16 : 18, "px;\n                  ").concat(o ? "" : c, '"\n      >\n        ').concat(t, "\n      </div>\n    ")
          }
--        static createBusMarker({busId: t, tripId: n, routeId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: l, inService: h, busMarkerData: p, expectedBus: u}) {
-+        static createBusMarker({busId: t, tripId: n, routeId: A, runId: r, position: e, ColorCodes: o, lastUpdated: s, isLive: l, inService: h, busMarkerData: p, expectedBus: u}) {
+-        static createBusMarker({busId: t, tripId: n, routeId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: l, inService: h, busMarkerData: p, expectedBus: u, busPath: x}) {
++        static createBusMarker({busId: t, tripId: n, routeId: A, runId: r, position: e, ColorCodes: o, lastUpdated: s, isLive: l, inService: h, busMarkerData: p, expectedBus: u, busPath: x}) {
 +            if (window?.customTrackerVehicleData?.[t]?.staleLiveData) {
 +                p = { ...p };
 +                p.badgeStyle = {
@@ -164,23 +164,23 @@
 +                    borderColor: "#d9d9d9"
 +                };
 +            }
-             const x = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
-             let w = !1
-               , E = !1;
-             u && (w = u.tripId !== n && u.route.id !== A,
-             E = u.route.badgeStyle.backgroundColor === p.badgeStyle.backgroundColor);
-             const f = "\n      <div style=\"\n         bottom: 1px;\n         left: 1px;\n         position: absolute;\n         height: 30px;\n         font-size: 11px;\n         font-weight: 700;\n         font-family: 'Source Sans 3', 'sans-serif';\n         border-radius: 24px;\n         text-align: center;\n         margin: 0;\n         padding: 0\"\n      >\n        <div style=\"\n          display: flex; flex-direction: row; flex: 0; min-height: 30px; max-height: 30px;\n          margin: 0; padding: 0; border-radius: 24px; ".concat(x, '"\n        >\n          <div style="\n            color: ').concat(p.badgeStyle.color, ";\n            background: ").concat(p.badgeStyle.backgroundColor, ";\n            border-radius: ").concat(w ? "24px 0 0 24px" : "24px", ";\n            padding: ").concat(w ? "4px 4px 4px 4px" : "4px 8px 4px 4px", ';\n            display: flex; flex-direction: row; flex-basis: auto; \n            max-height: 22px;"\n          >     \n            <div style="display: flex; flex-direction: row; flex: 0; margin: auto 4px auto 4px; padding: 0; font-size: 13px;">\n              ').concat(this._busMarkerSVG(p.badgeStyle.color), '\n            </div>\n            \n            <div style="\n              display: flex; flex-direction: row; flex: 0; margin: auto 0 auto 4px; \n              padding: 0; max-height: 18px;"\n            >\n              ').concat(h ? this.createRouteMarkerIcon({
+             const w = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
+             let E = !1
+               , f = !1;
+             u && (E = u.tripId !== n && u.route.id !== A,
+             f = u.route.badgeStyle.backgroundColor === p.badgeStyle.backgroundColor);
+             const B = "\n      <div style=\"\n         bottom: 1px;\n         left: 1px;\n         position: absolute;\n         height: 30px;\n         font-size: 11px;\n         font-weight: 700;\n         font-family: 'Source Sans 3', 'sans-serif';\n         border-radius: 24px;\n         text-align: center;\n         margin: 0;\n         padding: 0\"\n      >\n        <div style=\"\n          display: flex; flex-direction: row; flex: 0; min-height: 30px; max-height: 30px;\n          margin: 0; padding: 0; border-radius: 24px; ".concat(w, '"\n        >\n          <div style="\n            color: ').concat(p.badgeStyle.color, ";\n            background: ").concat(p.badgeStyle.backgroundColor, ";\n            border-radius: ").concat(E ? "24px 0 0 24px" : "24px", ";\n            padding: ").concat(E ? "4px 4px 4px 4px" : "4px 8px 4px 4px", ';\n            display: flex; flex-direction: row; flex-basis: auto; \n            max-height: 22px;"\n          >     \n            <div style="display: flex; flex-direction: row; flex: 0; margin: auto 4px auto 4px; padding: 0; font-size: 13px;">\n              ').concat(this._busMarkerSVG(p.badgeStyle.color), '\n            </div>\n            \n            <div style="\n              display: flex; flex-direction: row; flex: 0; margin: auto 0 auto 4px; \n              padding: 0; max-height: 18px;"\n            >\n              ').concat(h ? this.createRouteMarkerIcon({
 -                badgeLabel: p.badgeLabel,
 +                badgeLabel: `${r.replaceAll("-", "\u2011")}&nbsp;(${t})`,
                  backgroundColor: p.badgeStyle.backgroundColor,
                  borderColor: p.badgeStyle.color,
                  color: p.badgeStyle.color,
-@@ -240458,11 +240582,19 @@
-                 markerHTML: f
+@@ -240459,11 +240583,19 @@
+                 busPath: x
              }
          }
--        static createSelectedBusMarker({busId: t, tripId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: h, inService: p, route: u, variant: x, busFeatures: w, locale: E="en", hourStyle: f="12", busMarkerData: B, expectedBus: C, busScheduledStopTime: M}) {
-+        static createSelectedBusMarker({busId: t, tripId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: h, inService: p, route: u, runId: r, variant: x, busFeatures: w, locale: E="en", hourStyle: f="12", busMarkerData: B, expectedBus: C, busScheduledStopTime: M}) {
+-        static createSelectedBusMarker({busId: t, tripId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: h, inService: p, route: u, variant: x, busFeatures: w, locale: E="en", hourStyle: f="12", busMarkerData: B, expectedBus: C, busScheduledStopTime: M, busPath: U}) {
++        static createSelectedBusMarker({busId: t, tripId: A, position: e, ColorCodes: o, lastUpdated: s, isLive: h, inService: p, route: u, runId: r, variant: x, busFeatures: w, locale: E="en", hourStyle: f="12", busMarkerData: B, expectedBus: C, busScheduledStopTime: M, busPath: U}) {
 +            if (window?.customTrackerVehicleData?.[t]?.staleLiveData) {
 +                B = { ...B };
 +                B.badgeStyle = {
@@ -189,15 +189,15 @@
 +                    borderColor: "#d9d9d9"
 +                };
 +            }
-             const U = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
-             let v = !!C && C.tripId !== A;
-             const S = (t, n=!1) => "\n        <div style=\"\n          bottom: 1px;\n          left: 1px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ".concat(B.badgeStyle.color, ";\n          background: ").concat(B.badgeStyle.backgroundColor, ";\n          border-radius: 24px;\n          padding: 9px;\n          z-index: ").concat(t, ";\n          ").concat(n ? U : "", '; \n          "\n        >\n          <div style="display: flex; flex-direction: row; flex: 0; margin: auto; padding: 0; font-size: 13px;">\n            ').concat(this._busMarkerSVG(B.badgeStyle.color), "\n          </div>\n        </div>\n      ")
--              , I = "\n      <div>\n        \x3c!-- This icon sits under the main icon and content to make it appear like there is a \n        smooth box shadow on everything without it overlapping onto the main content --\x3e\n        ".concat(S(1, !0), "\n        ").concat(S(3), "\n          \n        <div style=\"\n          width: 160px;\n          bottom: 15px;\n          left: 15px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ").concat(o.textPrimary, ";\n          background: ").concat(o.backgroundColor, ";\n          border-radius: 24px 24px 24px 0;\n          border: 2px solid ").concat(B.badgeStyle.backgroundColor, ";\n          text-align: left;\n          margin: 0;\n          padding: 10px 8px 10px 8px;\n          z-index: 2;\n          ").concat(U, ';"\n        >\n          \x3c!--  Bus number section  --\x3e\n          ').concat(this._busMarkerHeaderHTMLString(t), "\n          \n          \x3c!--  Current bus route/variant section  --\x3e\n          ").concat(p ? this._busMarkerRouteHTMLString({
-+              , I = "\n      <div>\n        \x3c!-- This icon sits under the main icon and content to make it appear like there is a \n        smooth box shadow on everything without it overlapping onto the main content --\x3e\n        ".concat(S(1, !0), "\n        ").concat(S(3), "\n          \n        <div style=\"\n          width: 160px;\n          bottom: 15px;\n          left: 15px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ").concat(o.textPrimary, ";\n          background: ").concat(o.backgroundColor, ";\n          border-radius: 24px 24px 24px 0;\n          border: 2px solid ").concat(B.badgeStyle.backgroundColor, ";\n          text-align: left;\n          margin: 0;\n          padding: 10px 8px 10px 8px;\n          z-index: 2;\n          ").concat(U, ';"\n        >\n          \x3c!--  Bus number section  --\x3e\n          ').concat(this._busMarkerHeaderHTMLString(t, u.scheduledStops), "\n          \n          \x3c!--  Current bus route/variant section  --\x3e\n          ").concat(p ? this._busMarkerRouteHTMLString({
+             const v = "box-shadow: 1px 1px 5px ".concat(o.busMarkerShadow, ";");
+             let S = !!C && C.tripId !== A;
+             const I = (t, n=!1) => "\n        <div style=\"\n          bottom: 1px;\n          left: 1px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ".concat(B.badgeStyle.color, ";\n          background: ").concat(B.badgeStyle.backgroundColor, ";\n          border-radius: 24px;\n          padding: 9px;\n          z-index: ").concat(t, ";\n          ").concat(n ? v : "", '; \n          "\n        >\n          <div style="display: flex; flex-direction: row; flex: 0; margin: auto; padding: 0; font-size: 13px;">\n            ').concat(this._busMarkerSVG(B.badgeStyle.color), "\n          </div>\n        </div>\n      ")
+-              , Y = "\n      <div>\n        \x3c!-- This icon sits under the main icon and content to make it appear like there is a \n        smooth box shadow on everything without it overlapping onto the main content --\x3e\n        ".concat(I(1, !0), "\n        ").concat(I(3), "\n          \n        <div style=\"\n          width: 160px;\n          bottom: 15px;\n          left: 15px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ").concat(o.textPrimary, ";\n          background: ").concat(o.backgroundColor, ";\n          border-radius: 24px 24px 24px 0;\n          border: 2px solid ").concat(B.badgeStyle.backgroundColor, ";\n          text-align: left;\n          margin: 0;\n          padding: 10px 8px 10px 8px;\n          z-index: 2;\n          ").concat(v, ';"\n        >\n          \x3c!--  Bus number section  --\x3e\n          ').concat(this._busMarkerHeaderHTMLString(t), "\n          \n          \x3c!--  Current bus route/variant section  --\x3e\n          ").concat(p ? this._busMarkerRouteHTMLString({
++              , Y = "\n      <div>\n        \x3c!-- This icon sits under the main icon and content to make it appear like there is a \n        smooth box shadow on everything without it overlapping onto the main content --\x3e\n        ".concat(I(1, !0), "\n        ").concat(I(3), "\n          \n        <div style=\"\n          width: 160px;\n          bottom: 15px;\n          left: 15px;\n          position: absolute;\n          font-size: 13px;\n          font-weight: 700;\n          font-family: 'Source Sans 3', 'sans-serif';\n          color: ").concat(o.textPrimary, ";\n          background: ").concat(o.backgroundColor, ";\n          border-radius: 24px 24px 24px 0;\n          border: 2px solid ").concat(B.badgeStyle.backgroundColor, ";\n          text-align: left;\n          margin: 0;\n          padding: 10px 8px 10px 8px;\n          z-index: 2;\n          ").concat(v, ';"\n        >\n          \x3c!--  Bus number section  --\x3e\n          ').concat(this._busMarkerHeaderHTMLString(t, u.scheduledStops), "\n          \n          \x3c!--  Current bus route/variant section  --\x3e\n          ").concat(p ? this._busMarkerRouteHTMLString({
                  route: u,
                  variant: x
              }) : '\n        <div style="font-size: 13px; font-weight: bold; margin: 0 auto 0 auto; text-align: center;">\n          '.concat((0,
-@@ -240477,11 +240609,12 @@
+@@ -240478,11 +240610,12 @@
              }
              )(), "\n            \n            \x3c!--  Bus features section  --\x3e\n            ").concat(this._busMarkerFeaturesHTMLString(Object.assign({}, w, {
                  fillColor: o.textPrimary
@@ -212,7 +212,7 @@
              }), "\n            ").concat(h ? "" : this._offlineWarningSVGDiv({
                  ColorCodes: o,
                  marginTop: "0px",
-@@ -240515,10 +240648,10 @@
+@@ -240517,10 +240650,10 @@
              o += "bus-".concat(t),
              o
          }
@@ -225,7 +225,7 @@
          }
          static _busMarkerRouteHTMLString({route: t, variant: n}) {
              return '\n      <div>\n        <div>\n          <div style="display: flex; flex-direction: row; flex: 1; flex-wrap: wrap; justify-content: center">\n            <div style="display: flex; flex-direction: row; flex: 0; margin: 0 8px 0 0; padding: 0; max-height: 18px;">\n              '.concat(this.createRouteMarkerIcon({
-@@ -240555,7 +240688,7 @@
+@@ -240557,7 +240690,7 @@
          static _busMarkerFeaturesHTMLString({bikeRack: t, wheelchairSecurement: n, fillColor: A}) {
              return t || n ? "\n      <div>\n        ".concat(t ? this._bikeSVG(A) : "", "\n        ").concat(n ? this._wheelchairSecurementSVG(A) : "", "\n      </div>\n    ") : ""
          }
@@ -234,7 +234,7 @@
              let l, h = Math.abs((0,
              s.default)().diff((0,
              s.default)(t), "minutes", !0));
-@@ -240569,10 +240702,11 @@
+@@ -240571,10 +240704,11 @@
                      time_in_min: t
                  })
              } else {
@@ -249,7 +249,7 @@
              }
              return '\n      <p style="font-size: 11px; margin: 0; padding: 0 4px 0 0; flex: 1 1 auto; min-width: 0; text-align: left;">'.concat(l, "</p>\n    ")
          }
-@@ -244374,7 +244508,7 @@
+@@ -244341,7 +244475,7 @@
          null != o && (b.push(o),
          _.live = o),
          null != p && (b.push(p),
@@ -258,35 +258,35 @@
          (0,
          t.apiRequest)("".concat(c, "/schedule?").concat((0,
          t.buildQueryUrl)(_)), {}, b)
-@@ -245421,7 +245555,8 @@
+@@ -245332,7 +245466,8 @@
      var l = r(d[0])
        , c = r(d[1])
        , s = r(d[2]);
--    const t = ({DynamicMapContext: t, mapReady: h, webViewLeafletRef: n, printable: p=!1, setDisplayMapLoadingSpinner: u, subType: o, subKeys: V, subSkip: b, subDisabled: v, persistentVehicleMarkersRef: M, expectedBusesTripInfo: S, restrictVehicleMarkersToTrip: f=!1, clearSelectedVehicleOnDependencies: k, onVehiclesAutoRemoved: L}) => {
-+    const t = ({DynamicMapContext: t, mapReady: h, webViewLeafletRef: n, printable: p=!1, setDisplayMapLoadingSpinner: u, subType: o, subKeys: V, subSkip: b, subDisabled: v, persistentVehicleMarkersRef: M, expectedBusesTripInfo: S, restrictVehicleMarkersToTrip: f=!1, clearSelectedVehicleOnDependencies: k}) => {
+-    const t = ({DynamicMapContext: t, mapReady: h, webViewLeafletRef: n, printable: p=!1, setDisplayMapLoadingSpinner: u, subType: o, subKeys: V, subSkip: b, subDisabled: v, persistentVehicleMarkersRef: M, expectedBusesTripInfo: S, restrictVehicleMarkersToTrip: f=!1, clearSelectedVehicleOnDependencies: k, onVehiclesAutoRemoved: L, enableVehicleTripPathPreview: T=!1}) => {
++    const t = ({DynamicMapContext: t, mapReady: h, webViewLeafletRef: n, printable: p=!1, setDisplayMapLoadingSpinner: u, subType: o, subKeys: V, subSkip: b, subDisabled: v, persistentVehicleMarkersRef: M, expectedBusesTripInfo: S, restrictVehicleMarkersToTrip: f=!1, clearSelectedVehicleOnDependencies: k, enableVehicleTripPathPreview: T=!1}) => {
 +        const L = () => {};
-         const {liveVehicles: T} = (0,
+         const {liveVehicles: D} = (0,
          c.useLiveVehiclesSetting)()
-           , {busLocMarkersError: D, busLocMarkersData: y, busLocMarkersDataRef: R} = (0,
-@@ -245471,7 +245606,7 @@
+           , {busLocMarkersError: y, busLocMarkersData: R, busLocMarkersDataRef: I} = (0,
+@@ -245382,7 +245517,7 @@
              subError: E,
              vehicleTripError: B,
              vehicleTripData: O,
--            onVehiclesAutoRemoved: L
-+            onVehiclesAutoRemoved: () => {}
+-            onVehiclesAutoRemoved: L,
++            onVehiclesAutoRemoved: () => {},
+             enableVehicleTripPathPreview: T
          }),
          {
-             activeVehicles: C.activeVehicles,
-@@ -245487,7 +245622,7 @@
-             isVehiclePastScheduledStop: z,
-             appendVehicleMapMarkers: j,
-             refreshActiveVehicles: C.refreshActiveVehicles,
--            removeVehicleMarker: C.removeVehicleMarker
+@@ -245399,7 +245534,7 @@
+             isVehiclePastScheduledStop: j,
+             appendVehicleMapMarkers: K,
+             refreshActiveVehicles: w.refreshActiveVehicles,
+-            removeVehicleMarker: w.removeVehicleMarker
 +            removeVehicleMarker: () => {}
          }
      }
  }
-@@ -245594,7 +245729,7 @@
+@@ -245506,7 +245641,7 @@
              return !e.inService && t.expectedBus ? (t.busFeatures = t.expectedBus.busFeatures || {},
              t.locale = L,
              s = n.MarkersService.createSelectedBusMarker(t)) : v ? e.tripId !== v.id ? (s = n.MarkersService.createBusMarker(t),
@@ -295,7 +295,7 @@
              t.variant = v.variant,
              t.busFeatures = (null == v ? void 0 : v.busFeatures) || {},
              t.locale = L,
-@@ -245645,17 +245780,51 @@
+@@ -245557,6 +245692,7 @@
                      busId: s,
                      tripId: c.tripId,
                      routeId: c.routeId,
@@ -303,7 +303,8 @@
                      position: c.positions[0].position,
                      lastUpdated: c.updatedAt,
                      inService: c.inService,
-                     busMarkerData: c.busMarkerData,
+@@ -245564,11 +245700,44 @@
+                     busPath: c.busPath,
                      busScheduledStopTime: c.inService && null != t && t[s] ? t[s] : null
                  };
 +                if (c.busMarkerData.type === "dart") {
@@ -346,9 +347,9 @@
 +            });
 +            window.customTrackerHeading.textContent = (numBuses || staleLiveData) ? `${numBuses} active, ${staleLiveData} stale, ${noGPSData} w/o GPS` : oldPageHeading;
          }
-         ), [h, y, U, A, R, w, k]);
+         ), [h, y, U, A, R, w, b]);
          return {
-@@ -245714,15 +245883,71 @@
+@@ -245627,15 +245796,71 @@
          l.useMemo)(( () => !p || v), [p, v]);
          let Q = (0,
          l.useMemo)(( () => (0,
@@ -426,7 +427,7 @@
              const {data: s, error: u} = t || {};
              null != s && s.vehicleUpdates && !u ? (q(null),
              D(null),
-@@ -245982,10 +246207,11 @@
+@@ -245895,10 +246120,11 @@
          }
          ), [N, T, P, f, W, K, s])
            , Y = (0,
@@ -439,7 +440,7 @@
              y.current[e.key].updatedAt = n,
              y.current[e.key].deviation = s,
              null != t && t.key && null != l && l.key ? (y.current[e.key].busMarkerData = c.current[l.key],
-@@ -246015,10 +246241,6 @@
+@@ -245928,10 +246154,6 @@
              const {vehicle: t, trip: l, route: s, path: h, ts: f} = e || {};
              if (null == t || !t.key || 0 === (h || []).length || !f || !c.current.hasOwnProperty(null == s ? void 0 : s.key))
                  return;
@@ -450,7 +451,7 @@
              if (k) {
                  const e = (o || []).find(( ({id: e}) => e === t.key));
                  if (!e || e.tripId !== (null == l ? void 0 : l.key))
-@@ -246067,7 +246289,7 @@
+@@ -245980,7 +246202,7 @@
              clearSelectedVehicle: K,
              resetVehicleMarkers: X,
              upsertVehicleMarker: Z,
@@ -459,13 +460,13 @@
              refreshActiveVehicles: W,
              setSelectedVehicleInService: G
          }
-@@ -246284,10 +246506,11 @@
+@@ -246232,10 +246454,11 @@
          }
-         ), [i, s]))
+         ), [c, l]))
      }
--      , y = ({liveVehicleState: e, mapReady: c, webViewLeafletRef: i, subInitializable: s, onVehiclesAutoRemoved: o}) => {
+-      , S = ({liveVehicleState: e, mapReady: i, webViewLeafletRef: c, subInitializable: u, onVehiclesAutoRemoved: o}) => {
 -        const {removeVehicleMarker: f, refreshActiveVehicles: b, vehicleMarkersRef: h} = e
-+      , y = ({liveVehicleState: e, mapReady: c, webViewLeafletRef: i, subInitializable: s}) => {
++      , S = ({liveVehicleState: e, mapReady: i, webViewLeafletRef: c, subInitializable: u}) => {
 +        const {refreshActiveVehicles: b, vehicleMarkersRef: h} = e
            , p = (0,
          n.useRef)(void 0);
@@ -473,7 +474,7 @@
          (0,
          t.useFocusEffect)((0,
          n.useCallback)(( () => {
-@@ -246312,8 +246535,8 @@
+@@ -246260,8 +246483,8 @@
                  b())
              }
              ;
@@ -484,7 +485,7 @@
              () => {
                  null != p.current && clearInterval(p.current)
              }
-@@ -246996,7 +247219,7 @@
+@@ -246999,7 +247222,7 @@
            , $ = (0,
          u.useQuery)(["stopRoutes", _, Z, L], ( () => (0,
          n.routes)(_, K && L === T.schedule ? {
@@ -493,7 +494,7 @@
          } : {})), {
              enabled: !!z.data
          })
-@@ -247631,7 +247854,7 @@
+@@ -247634,7 +247857,7 @@
                  prefix: "far",
                  iconName: "clock",
                  text: p("trips:schedule:eta", {
@@ -502,7 +503,7 @@
                  }),
                  style: u
              })]
-@@ -249102,7 +249325,7 @@
+@@ -249105,7 +249328,7 @@
          (0,
          s.useEffect)(( () => {
              const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
@@ -511,16 +512,16 @@
              Te(i.nextTripId),
              U.current = U.current + 1,
              we(!0))
-@@ -354423,7 +354646,7 @@
+@@ -354280,7 +354503,7 @@
              clearSelectedVehicleOnDependencies: Se,
              persistentVehicleMarkersRef: A,
              expectedBusesTripInfo: fe.expectedBusesTripInfo,
--            onVehiclesAutoRemoved: ye
-+            onVehiclesAutoRemoved: () => {}
+-            onVehiclesAutoRemoved: ye,
++            onVehiclesAutoRemoved: () => {},
+             enableVehicleTripPathPreview: !0
          })
-           , Ee = (0,
-         s.useCallback)(( (e=null, t=null) => {
-@@ -355271,8 +355494,8 @@
+           , Ve = (0,
+@@ -355129,8 +355352,8 @@
        , V = r(d[35])
        , z = r(d[36])
        , W = r(d[37]);
@@ -531,7 +532,7 @@
      (0,
      f.schedule)(e, t))
        , K = () => {
-@@ -355304,14 +355527,14 @@
+@@ -355162,14 +355385,14 @@
          S.useInfiniteQuery)(["stopSchedule", n, w], ( ({pageParam: e}) => q(n, {
              start_time: e
          })), {
@@ -548,7 +549,7 @@
              }
              )(e, 0, C)
          })
-@@ -355462,7 +355685,11 @@
+@@ -355320,7 +355543,11 @@
                      setForceOpenTimepicker: L,
                      endOfBookingReachedError: h,
                      isInitialBusSyncRef: l
@@ -561,7 +562,7 @@
              })
          }
      }
-@@ -355712,7 +355939,7 @@
+@@ -355570,7 +355797,7 @@
          const u = 0 === t ? J : s.default.Fragment;
          let p = () => (0,
          W.jsx)(W.Fragment, {});
@@ -570,7 +571,7 @@
              (i ? (0,
              o.default)() : (0,
              o.default)(c)).add(1, "hour").isSameOrBefore((0,
-@@ -356635,9 +356862,9 @@
+@@ -356493,9 +356720,9 @@
          T.jsx)(o.TimeFilterChip, {
              alignment: s.MODAL_ALIGNMENT.topLeft,
              timeFilterNow: p,
@@ -582,7 +583,7 @@
              setTimeFilterToNow: y,
              a11yLabel: N,
              closeA11yLabel: x,
-@@ -361449,7 +361676,7 @@
+@@ -361307,7 +361534,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
@@ -591,7 +592,7 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
-@@ -401413,7 +401640,7 @@
+@@ -401271,7 +401498,7 @@
          })
            , we = (0,
          o.useMemo)(( () => [le, ie]), [le, ie])
@@ -600,7 +601,7 @@
          i.useLiveVehicleWatcher)({
              DynamicMapContext: p.RoutesMapContext,
              mapReady: J,
-@@ -401534,12 +401761,10 @@
+@@ -401392,12 +401619,10 @@
                  let n = e[t];
                  if (!je.current.hasOwnProperty(n))
                      continue;
@@ -614,7 +615,7 @@
          (0,
          i.useMarkersWatcher)({
              mapReady: J,
-@@ -414196,7 +414421,7 @@
+@@ -414054,7 +414279,7 @@
                      children: e
                  })
              }
@@ -623,7 +624,7 @@
                  var de, ue;
                  let t;
                  q.length > 0 && (t = q[q.length - 1]);
-@@ -414413,7 +414638,7 @@
+@@ -414271,7 +414496,7 @@
          x.useLocaleSetting)()
            , {tripDestination: I, upcomingScheduledStops: j} = (0,
          t.useContext)(u.OnTheGoTripScheduleContext)
@@ -632,7 +633,7 @@
            , P = o.default.create({
              textMuted: {
                  fontSize: 16,
-@@ -414433,7 +414658,7 @@
+@@ -414291,7 +414516,7 @@
              time: (0,
              c.scheduleDepartureTime)(C.estimatedTime, {
                  locale: b
@@ -641,7 +642,7 @@
          });
          if (h) {
              const e = j.findIndex((e => e.stopId === C.stopId));
-@@ -414445,10 +414670,15 @@
+@@ -414303,10 +414528,15 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
          }
