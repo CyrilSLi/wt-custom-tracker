@@ -5,7 +5,7 @@ create_patch() {
     python scripts/update_hardcoded_variables.py
     echo "Hardcoded variables updated successfully."
 
-    diff -Naur index-js-orig/index-orig.js index-js-orig/index-patched.js > index-js-orig/index.js.patch || true
+    diff -Naur index-js-orig/index-orig.js index-js-orig/index-patched.js | tail -n +3 > index-js-orig/index.js.patch || true
     echo "Created patch file: index-js-orig/index.js.patch"
 
     python scripts/generate_index_js_patch.py

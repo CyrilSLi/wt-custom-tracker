@@ -1,5 +1,3 @@
---- index-js-orig/index-orig.js	2026-06-18 10:39:26.796218654 -0500
-+++ index-js-orig/index-patched.js	2026-06-26 20:09:16.325303612 -0500
 @@ -1,3 +1,67 @@
 +// Start of programmatically updated variables
 +
@@ -307,7 +305,13 @@
          }
      }
  }
-@@ -245506,7 +245662,7 @@
+@@ -245503,10 +245659,13 @@
+           , R = (0,
+         t.useCallback)(( (e, t) => {
+             let s;
++            if (v?.scheduledStops?.[0]?.estimatedTime && (new Date() - new Date(v.scheduledStops[v.scheduledStops.length - 1].estimatedTime) > 1800 * 1000)) {
++                customTrackerVehicleData[t.busId].staleLiveData = true;
++            }
              return !e.inService && t.expectedBus ? (t.busFeatures = t.expectedBus.busFeatures || {},
              t.locale = L,
              s = n.MarkersService.createSelectedBusMarker(t)) : v ? e.tripId !== v.id ? (s = n.MarkersService.createBusMarker(t),
@@ -316,7 +320,7 @@
              t.variant = v.variant,
              t.busFeatures = (null == v ? void 0 : v.busFeatures) || {},
              t.locale = L,
-@@ -245557,6 +245713,7 @@
+@@ -245557,6 +245716,7 @@
                      busId: s,
                      tripId: c.tripId,
                      routeId: c.routeId,
@@ -324,7 +328,7 @@
                      position: c.positions[0].position,
                      lastUpdated: c.updatedAt,
                      inService: c.inService,
-@@ -245564,11 +245721,44 @@
+@@ -245564,11 +245724,44 @@
                      busPath: c.busPath,
                      busScheduledStopTime: c.inService && null != t && t[s] ? t[s] : null
                  };
@@ -370,7 +374,7 @@
          }
          ), [h, y, U, A, R, w, b]);
          return {
-@@ -245627,15 +245817,71 @@
+@@ -245627,15 +245820,71 @@
          l.useMemo)(( () => !p || v), [p, v]);
          let Q = (0,
          l.useMemo)(( () => (0,
@@ -448,7 +452,7 @@
              const {data: s, error: u} = t || {};
              null != s && s.vehicleUpdates && !u ? (q(null),
              D(null),
-@@ -245895,10 +246141,11 @@
+@@ -245895,10 +246144,11 @@
          }
          ), [N, T, P, f, W, K, s])
            , Y = (0,
@@ -461,7 +465,7 @@
              y.current[e.key].updatedAt = n,
              y.current[e.key].deviation = s,
              null != t && t.key && null != l && l.key ? (y.current[e.key].busMarkerData = c.current[l.key],
-@@ -245928,10 +246175,6 @@
+@@ -245928,10 +246178,6 @@
              const {vehicle: t, trip: l, route: s, path: h, ts: f} = e || {};
              if (null == t || !t.key || 0 === (h || []).length || !f || !c.current.hasOwnProperty(null == s ? void 0 : s.key))
                  return;
@@ -472,7 +476,7 @@
              if (k) {
                  const e = (o || []).find(( ({id: e}) => e === t.key));
                  if (!e || e.tripId !== (null == l ? void 0 : l.key))
-@@ -245980,7 +246223,7 @@
+@@ -245980,7 +246226,7 @@
              clearSelectedVehicle: K,
              resetVehicleMarkers: X,
              upsertVehicleMarker: Z,
@@ -481,7 +485,7 @@
              refreshActiveVehicles: W,
              setSelectedVehicleInService: G
          }
-@@ -246232,10 +246475,11 @@
+@@ -246232,10 +246478,11 @@
          }
          ), [c, l]))
      }
@@ -495,7 +499,7 @@
          (0,
          t.useFocusEffect)((0,
          n.useCallback)(( () => {
-@@ -246260,8 +246504,8 @@
+@@ -246260,8 +246507,8 @@
                  b())
              }
              ;
@@ -506,7 +510,7 @@
              () => {
                  null != p.current && clearInterval(p.current)
              }
-@@ -246999,7 +247243,7 @@
+@@ -246999,7 +247246,7 @@
            , $ = (0,
          u.useQuery)(["stopRoutes", _, Z, L], ( () => (0,
          n.routes)(_, K && L === T.schedule ? {
@@ -515,7 +519,7 @@
          } : {})), {
              enabled: !!z.data
          })
-@@ -247634,7 +247878,7 @@
+@@ -247634,7 +247881,7 @@
                  prefix: "far",
                  iconName: "clock",
                  text: p("trips:schedule:eta", {
@@ -524,7 +528,7 @@
                  }),
                  style: u
              })]
-@@ -248200,7 +248444,7 @@
+@@ -248200,7 +248447,7 @@
                      focusable: !0,
                      accessibilityLabel: v
                  },
@@ -533,7 +537,7 @@
                  left: () => (0,
                  y.jsx)(c.default, {
                      importantForAccessibility: "no-hide-descendants",
-@@ -249105,7 +249349,7 @@
+@@ -249105,7 +249352,7 @@
          (0,
          s.useEffect)(( () => {
              const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
@@ -542,7 +546,7 @@
              Te(i.nextTripId),
              U.current = U.current + 1,
              we(!0))
-@@ -354280,7 +354524,7 @@
+@@ -354280,7 +354527,7 @@
              clearSelectedVehicleOnDependencies: Se,
              persistentVehicleMarkersRef: A,
              expectedBusesTripInfo: fe.expectedBusesTripInfo,
@@ -551,7 +555,7 @@
              enableVehicleTripPathPreview: !0
          })
            , Ve = (0,
-@@ -355129,8 +355373,8 @@
+@@ -355129,8 +355376,8 @@
        , V = r(d[35])
        , z = r(d[36])
        , W = r(d[37]);
@@ -562,7 +566,7 @@
      (0,
      f.schedule)(e, t))
        , K = () => {
-@@ -355162,14 +355406,14 @@
+@@ -355162,14 +355409,14 @@
          S.useInfiniteQuery)(["stopSchedule", n, w], ( ({pageParam: e}) => q(n, {
              start_time: e
          })), {
@@ -579,7 +583,7 @@
              }
              )(e, 0, C)
          })
-@@ -355320,7 +355564,11 @@
+@@ -355320,7 +355567,11 @@
                      setForceOpenTimepicker: L,
                      endOfBookingReachedError: h,
                      isInitialBusSyncRef: l
@@ -592,7 +596,7 @@
              })
          }
      }
-@@ -355570,7 +355818,7 @@
+@@ -355570,7 +355821,7 @@
          const u = 0 === t ? J : s.default.Fragment;
          let p = () => (0,
          W.jsx)(W.Fragment, {});
@@ -601,7 +605,7 @@
              (i ? (0,
              o.default)() : (0,
              o.default)(c)).add(1, "hour").isSameOrBefore((0,
-@@ -355767,7 +356015,7 @@
+@@ -355767,7 +356018,7 @@
                  accessibilityHint: se,
                  children: (0,
                  B.jsx)(u.AccessibleCardTitle, {
@@ -610,7 +614,7 @@
                      subtitle: e.name,
                      titleNumberOfLines: 2,
                      subtitleNumberOfLines: 1,
-@@ -356493,9 +356741,9 @@
+@@ -356493,9 +356744,9 @@
          T.jsx)(o.TimeFilterChip, {
              alignment: s.MODAL_ALIGNMENT.topLeft,
              timeFilterNow: p,
@@ -622,7 +626,7 @@
              setTimeFilterToNow: y,
              a11yLabel: N,
              closeA11yLabel: x,
-@@ -361307,7 +361555,7 @@
+@@ -361307,7 +361558,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
@@ -631,7 +635,7 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
-@@ -401271,7 +401519,7 @@
+@@ -401271,7 +401522,7 @@
          })
            , we = (0,
          o.useMemo)(( () => [le, ie]), [le, ie])
@@ -640,7 +644,7 @@
          i.useLiveVehicleWatcher)({
              DynamicMapContext: p.RoutesMapContext,
              mapReady: J,
-@@ -401392,12 +401640,10 @@
+@@ -401392,12 +401643,10 @@
                  let n = e[t];
                  if (!je.current.hasOwnProperty(n))
                      continue;
@@ -654,7 +658,7 @@
          (0,
          i.useMarkersWatcher)({
              mapReady: J,
-@@ -414054,7 +414300,7 @@
+@@ -414054,7 +414303,7 @@
                      children: e
                  })
              }
@@ -663,7 +667,7 @@
                  var de, ue;
                  let t;
                  q.length > 0 && (t = q[q.length - 1]);
-@@ -414271,7 +414517,7 @@
+@@ -414271,7 +414520,7 @@
          x.useLocaleSetting)()
            , {tripDestination: I, upcomingScheduledStops: j} = (0,
          t.useContext)(u.OnTheGoTripScheduleContext)
@@ -672,7 +676,7 @@
            , P = o.default.create({
              textMuted: {
                  fontSize: 16,
-@@ -414291,7 +414537,7 @@
+@@ -414291,7 +414540,7 @@
              time: (0,
              c.scheduleDepartureTime)(C.estimatedTime, {
                  locale: b
@@ -681,7 +685,7 @@
          });
          if (h) {
              const e = j.findIndex((e => e.stopId === C.stopId));
-@@ -414303,10 +414549,15 @@
+@@ -414303,10 +414552,15 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
          }
