@@ -4,11 +4,18 @@ A patch for the Winnipeg Transit web app which improves the functionality of the
 
 ## Features
 
-- Show the run code and fleet number of:
-  - Bus icons on the map, instead of the route number (e.g. "1-110-1 (945)" instead of "888").
-  - Stop schedules, instead of a redundant route name (e.g. "Run 110-1, Bus 945" instead of "Tache").
-  - Stop schedule previews, in addition to the route destination (e.g. "Whittier Park (110-1, 945)" instead of "Whittier Park").
-  - Fleet numbers are omitted if a bus has not yet been assigned to a run. Run codes are always available.
+- Show the run code, fleet number, and vehicle model on:
+  - Bus icons on the map, instead of the route number (e.g. "1-110-1, L3 945" instead of "888"). **Shortened model names**
+    - The full model name in the popup (e.g. "2001 D30LF #938")
+  - Stop schedules, instead of a redundant route name (e.g. "110-1, 2001 D30LF #945" instead of "Tache").
+  - Stop schedule previews, in addition to the route destination (e.g. "Whittier Park (110-1, L3 945)" instead of "Whittier Park"). **Shortened model names**
+  - Fleet numbers and vehicle models are omitted if a bus has not yet been assigned to a run. Run codes are always available.
+  - Shortened model names (model years are omitted due to space constraints):
+    - L3 / L4: D30LF / D40LF
+    - R4: D40LFR
+    - X4 / X6: XD40 / XD60
+    - E4 / E6: XE40 / XE60
+    - H4 / H6: XHE40 / XHE60
 - When clicking on a bus icon, add links to [WTLive](https://www.wtlivewpg.com) for the bus's run and the bus history for the vehicle, and to On the Go for the vehicle.
 - Show how late or early a bus is on its bus icon and its On the Go page, calculated as the difference between scheduled and estimated stop times.
 - When using On the Go, continuously update the "Next stop" section with the bus's next stop instead of remaining static after the page loads.
