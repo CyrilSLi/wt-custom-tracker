@@ -66,7 +66,7 @@
  var __BUNDLE_START_TIME__ = globalThis.nativePerformanceNow ? nativePerformanceNow() : Date.now()
    , __DEV__ = false
    , process = globalThis.process || {}
-@@ -87279,10 +87343,83 @@
+@@ -87284,10 +87348,83 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
                              }
@@ -151,7 +151,7 @@
                                  d.end_time_ms = n.now(),
                                  d.status_code = e.status,
                                  d.response_content_type = e.headers.get("Content-Type");
-@@ -161744,7 +161881,7 @@
+@@ -161767,7 +161904,7 @@
          u.default)().add(15, "minutes");
          d.locale(o),
          d.isBefore(f) ? c.visual = (0,
@@ -160,7 +160,7 @@
          u.default)()) ? c.visual = (0,
          l.t)("common:time.due") : n && d.isBefore(p) ? c.visual = d.toNow(!0) : c.visual = d.format(s.DATE_TIME_FORMATS[o][a].time);
          let y = new RegExp((0,
-@@ -161752,7 +161889,7 @@
+@@ -161775,7 +161912,7 @@
            , b = new RegExp((0,
          l.t)("common:time.due"),"gi")
            , v = new RegExp((0,
@@ -169,7 +169,7 @@
          return c.visual.match(y) ? c.a11y = (0,
          l.t)("stops:schedules.departs_in", {
              time: c.visual
-@@ -240419,14 +240556,22 @@
+@@ -240442,14 +240579,22 @@
              const c = "\n      background-color: ".concat(n || "#ffffff", ";\n      border-color: ").concat(A || "#d9d9d9", ";\n      border-width: 1px;\n      border-style: solid;\n      border-radius: 4px;\n    ");
              return "\n      <div style=\"font-weight: 700;\n                  font-family: 'Source Sans 3', 'sans-serif';\n                  text-align: center;\n                  color: ".concat(e || "#000000", ";\n                  padding: ").concat(o ? 0 : 5, "px;\n                  font-size: 15px;\n                  min-width: ").concat(o ? 15 : 18, "px;\n                  min-height: ").concat(o ? 15 : 18, "px;\n                  line-height: ").concat(o ? 16 : 18, "px;\n                  ").concat(o ? "" : c, '"\n      >\n        ').concat(t, "\n      </div>\n    ")
          }
@@ -194,7 +194,7 @@
                  backgroundColor: p.badgeStyle.backgroundColor,
                  borderColor: p.badgeStyle.color,
                  color: p.badgeStyle.color,
-@@ -240459,11 +240604,19 @@
+@@ -240482,11 +240627,19 @@
                  busPath: x
              }
          }
@@ -216,7 +216,7 @@
                  route: u,
                  variant: x
              }) : '\n        <div style="font-size: 13px; font-weight: bold; margin: 0 auto 0 auto; text-align: center;">\n          '.concat((0,
-@@ -240478,11 +240631,12 @@
+@@ -240501,11 +240654,12 @@
              }
              )(), "\n            \n            \x3c!--  Bus features section  --\x3e\n            ").concat(this._busMarkerFeaturesHTMLString(Object.assign({}, w, {
                  fillColor: o.textPrimary
@@ -231,7 +231,7 @@
              }), "\n            ").concat(h ? "" : this._offlineWarningSVGDiv({
                  ColorCodes: o,
                  marginTop: "0px",
-@@ -240517,10 +240671,10 @@
+@@ -240540,10 +240694,10 @@
              o += "bus-".concat(t),
              o
          }
@@ -244,7 +244,7 @@
          }
          static _busMarkerRouteHTMLString({route: t, variant: n}) {
              return '\n      <div>\n        <div>\n          <div style="display: flex; flex-direction: row; flex: 1; flex-wrap: wrap; justify-content: center">\n            <div style="display: flex; flex-direction: row; flex: 0; margin: 0 8px 0 0; padding: 0; max-height: 18px;">\n              '.concat(this.createRouteMarkerIcon({
-@@ -240557,7 +240711,7 @@
+@@ -240580,7 +240734,7 @@
          static _busMarkerFeaturesHTMLString({bikeRack: t, wheelchairSecurement: n, fillColor: A}) {
              return t || n ? "\n      <div>\n        ".concat(t ? this._bikeSVG(A) : "", "\n        ").concat(n ? this._wheelchairSecurementSVG(A) : "", "\n      </div>\n    ") : ""
          }
@@ -253,7 +253,7 @@
              let l, h = Math.abs((0,
              s.default)().diff((0,
              s.default)(t), "minutes", !0));
-@@ -240571,10 +240725,11 @@
+@@ -240594,10 +240748,11 @@
                      time_in_min: t
                  })
              } else {
@@ -268,7 +268,7 @@
              }
              return '\n      <p style="font-size: 11px; margin: 0; padding: 0 4px 0 0; flex: 1 1 auto; min-width: 0; text-align: left;">'.concat(l, "</p>\n    ")
          }
-@@ -244341,7 +244496,7 @@
+@@ -244364,7 +244519,7 @@
          null != o && (b.push(o),
          _.live = o),
          null != p && (b.push(p),
@@ -277,7 +277,7 @@
          (0,
          t.apiRequest)("".concat(c, "/schedule?").concat((0,
          t.buildQueryUrl)(_)), {}, b)
-@@ -245332,7 +245487,8 @@
+@@ -245355,7 +245510,8 @@
      var l = r(d[0])
        , c = r(d[1])
        , s = r(d[2]);
@@ -287,7 +287,7 @@
          const {liveVehicles: D} = (0,
          c.useLiveVehiclesSetting)()
            , {busLocMarkersError: y, busLocMarkersData: R, busLocMarkersDataRef: I} = (0,
-@@ -245382,7 +245538,7 @@
+@@ -245405,7 +245561,7 @@
              subError: E,
              vehicleTripError: B,
              vehicleTripData: O,
@@ -296,7 +296,7 @@
              enableVehicleTripPathPreview: T
          }),
          {
-@@ -245399,7 +245555,7 @@
+@@ -245422,7 +245578,7 @@
              isVehiclePastScheduledStop: j,
              appendVehicleMapMarkers: K,
              refreshActiveVehicles: w.refreshActiveVehicles,
@@ -305,7 +305,7 @@
          }
      }
  }
-@@ -245503,10 +245659,13 @@
+@@ -245526,10 +245682,13 @@
            , R = (0,
          t.useCallback)(( (e, t) => {
              let s;
@@ -320,7 +320,7 @@
              t.variant = v.variant,
              t.busFeatures = (null == v ? void 0 : v.busFeatures) || {},
              t.locale = L,
-@@ -245557,6 +245716,7 @@
+@@ -245580,6 +245739,7 @@
                      busId: s,
                      tripId: c.tripId,
                      routeId: c.routeId,
@@ -328,7 +328,7 @@
                      position: c.positions[0].position,
                      lastUpdated: c.updatedAt,
                      inService: c.inService,
-@@ -245564,11 +245724,44 @@
+@@ -245587,11 +245747,44 @@
                      busPath: c.busPath,
                      busScheduledStopTime: c.inService && null != t && t[s] ? t[s] : null
                  };
@@ -374,7 +374,7 @@
          }
          ), [h, y, U, A, R, w, b]);
          return {
-@@ -245627,15 +245820,71 @@
+@@ -245650,15 +245843,71 @@
          l.useMemo)(( () => !p || v), [p, v]);
          let Q = (0,
          l.useMemo)(( () => (0,
@@ -452,7 +452,7 @@
              const {data: s, error: u} = t || {};
              null != s && s.vehicleUpdates && !u ? (q(null),
              D(null),
-@@ -245895,10 +246144,11 @@
+@@ -245918,10 +246167,11 @@
          }
          ), [N, T, P, f, W, K, s])
            , Y = (0,
@@ -465,7 +465,7 @@
              y.current[e.key].updatedAt = n,
              y.current[e.key].deviation = s,
              null != t && t.key && null != l && l.key ? (y.current[e.key].busMarkerData = c.current[l.key],
-@@ -245928,10 +246178,6 @@
+@@ -245951,10 +246201,6 @@
              const {vehicle: t, trip: l, route: s, path: h, ts: f} = e || {};
              if (null == t || !t.key || 0 === (h || []).length || !f || !c.current.hasOwnProperty(null == s ? void 0 : s.key))
                  return;
@@ -476,7 +476,7 @@
              if (k) {
                  const e = (o || []).find(( ({id: e}) => e === t.key));
                  if (!e || e.tripId !== (null == l ? void 0 : l.key))
-@@ -245980,7 +246226,7 @@
+@@ -246003,7 +246249,7 @@
              clearSelectedVehicle: K,
              resetVehicleMarkers: X,
              upsertVehicleMarker: Z,
@@ -485,7 +485,7 @@
              refreshActiveVehicles: W,
              setSelectedVehicleInService: G
          }
-@@ -246232,10 +246478,11 @@
+@@ -246255,10 +246501,11 @@
          }
          ), [c, l]))
      }
@@ -499,7 +499,7 @@
          (0,
          t.useFocusEffect)((0,
          n.useCallback)(( () => {
-@@ -246260,8 +246507,8 @@
+@@ -246283,8 +246530,8 @@
                  b())
              }
              ;
@@ -510,7 +510,7 @@
              () => {
                  null != p.current && clearInterval(p.current)
              }
-@@ -246999,7 +247246,7 @@
+@@ -247022,7 +247269,7 @@
            , $ = (0,
          u.useQuery)(["stopRoutes", _, Z, L], ( () => (0,
          n.routes)(_, K && L === T.schedule ? {
@@ -519,7 +519,7 @@
          } : {})), {
              enabled: !!z.data
          })
-@@ -247634,7 +247881,7 @@
+@@ -247657,7 +247904,7 @@
                  prefix: "far",
                  iconName: "clock",
                  text: p("trips:schedule:eta", {
@@ -528,7 +528,7 @@
                  }),
                  style: u
              })]
-@@ -248200,7 +248447,7 @@
+@@ -248223,7 +248470,7 @@
                      focusable: !0,
                      accessibilityLabel: v
                  },
@@ -537,7 +537,7 @@
                  left: () => (0,
                  y.jsx)(c.default, {
                      importantForAccessibility: "no-hide-descendants",
-@@ -249105,7 +249352,7 @@
+@@ -249128,7 +249375,7 @@
          (0,
          s.useEffect)(( () => {
              const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
@@ -546,7 +546,7 @@
              Te(i.nextTripId),
              U.current = U.current + 1,
              we(!0))
-@@ -354280,7 +354527,7 @@
+@@ -354325,7 +354572,7 @@
              clearSelectedVehicleOnDependencies: Se,
              persistentVehicleMarkersRef: A,
              expectedBusesTripInfo: fe.expectedBusesTripInfo,
@@ -555,7 +555,7 @@
              enableVehicleTripPathPreview: !0
          })
            , Ve = (0,
-@@ -355129,8 +355376,8 @@
+@@ -355174,8 +355421,8 @@
        , V = r(d[35])
        , z = r(d[36])
        , W = r(d[37]);
@@ -566,7 +566,7 @@
      (0,
      f.schedule)(e, t))
        , K = () => {
-@@ -355162,14 +355409,14 @@
+@@ -355207,14 +355454,14 @@
          S.useInfiniteQuery)(["stopSchedule", n, w], ( ({pageParam: e}) => q(n, {
              start_time: e
          })), {
@@ -583,7 +583,7 @@
              }
              )(e, 0, C)
          })
-@@ -355320,7 +355567,11 @@
+@@ -355365,7 +355612,11 @@
                      setForceOpenTimepicker: L,
                      endOfBookingReachedError: h,
                      isInitialBusSyncRef: l
@@ -596,7 +596,7 @@
              })
          }
      }
-@@ -355570,7 +355821,7 @@
+@@ -355615,7 +355866,7 @@
          const u = 0 === t ? J : s.default.Fragment;
          let p = () => (0,
          W.jsx)(W.Fragment, {});
@@ -605,7 +605,7 @@
              (i ? (0,
              o.default)() : (0,
              o.default)(c)).add(1, "hour").isSameOrBefore((0,
-@@ -355767,7 +356018,7 @@
+@@ -355812,7 +356063,7 @@
                  accessibilityHint: se,
                  children: (0,
                  B.jsx)(u.AccessibleCardTitle, {
@@ -614,7 +614,7 @@
                      subtitle: e.name,
                      titleNumberOfLines: 2,
                      subtitleNumberOfLines: 1,
-@@ -356493,9 +356744,9 @@
+@@ -356538,9 +356789,9 @@
          T.jsx)(o.TimeFilterChip, {
              alignment: s.MODAL_ALIGNMENT.topLeft,
              timeFilterNow: p,
@@ -626,7 +626,7 @@
              setTimeFilterToNow: y,
              a11yLabel: N,
              closeA11yLabel: x,
-@@ -361307,7 +361558,7 @@
+@@ -361352,7 +361603,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
@@ -635,7 +635,7 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
-@@ -401271,7 +401522,7 @@
+@@ -401316,7 +401567,7 @@
          })
            , we = (0,
          o.useMemo)(( () => [le, ie]), [le, ie])
@@ -644,7 +644,7 @@
          i.useLiveVehicleWatcher)({
              DynamicMapContext: p.RoutesMapContext,
              mapReady: J,
-@@ -401392,12 +401643,10 @@
+@@ -401437,12 +401688,10 @@
                  let n = e[t];
                  if (!je.current.hasOwnProperty(n))
                      continue;
@@ -658,7 +658,7 @@
          (0,
          i.useMarkersWatcher)({
              mapReady: J,
-@@ -414054,7 +414303,7 @@
+@@ -414099,7 +414348,7 @@
                      children: e
                  })
              }
@@ -667,7 +667,7 @@
                  var de, ue;
                  let t;
                  q.length > 0 && (t = q[q.length - 1]);
-@@ -414271,7 +414520,7 @@
+@@ -414316,7 +414565,7 @@
          x.useLocaleSetting)()
            , {tripDestination: I, upcomingScheduledStops: j} = (0,
          t.useContext)(u.OnTheGoTripScheduleContext)
@@ -676,7 +676,7 @@
            , P = o.default.create({
              textMuted: {
                  fontSize: 16,
-@@ -414291,7 +414540,7 @@
+@@ -414336,7 +414585,7 @@
              time: (0,
              c.scheduleDepartureTime)(C.estimatedTime, {
                  locale: b
@@ -685,7 +685,7 @@
          });
          if (h) {
              const e = j.findIndex((e => e.stopId === C.stopId));
-@@ -414303,10 +414552,15 @@
+@@ -414348,10 +414597,15 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
          }
