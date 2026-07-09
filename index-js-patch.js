@@ -32,6 +32,7 @@
         let appScript;
 
         function replaceScript(newScript) {
+            updateStatus("Loading app...");
             const newScriptEl = document.createElement("script");
             newScriptEl.textContent = newScript;
             document.getElementById("custom-script-loader").remove();
@@ -79,7 +80,6 @@
             }
 
         }
-        updateStatus("Loading app...");
         replaceScript(appScript);
 
     } catch (e) {
