@@ -32,7 +32,6 @@
         let appScript;
 
         function replaceScript(newScript) {
-            updateStatus("Loading app...");
             const newScriptEl = document.createElement("script");
             newScriptEl.textContent = newScript;
             document.getElementById("custom-script-loader").remove();
@@ -46,6 +45,7 @@
         if (appVersion !== patchVersion) {
             if (!cachedVersion) { // No cached patch and patch is outdated
                 alert("Patch version outdated. Custom features will be disabled until the developer updates the patch.");
+                updateStatus("Loading app...");
                 replaceScript(await (await fetch(appVersion)).text());
                 return;
             } else { // Cached patch exists but is outdated
@@ -80,6 +80,7 @@
             }
 
         }
+        updateStatus("Loading app...");
         replaceScript(appScript);
 
     } catch (e) {
