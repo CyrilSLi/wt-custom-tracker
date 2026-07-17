@@ -1,4 +1,4 @@
-@@ -1,3 +1,67 @@
+@@ -1,3 +1,92 @@
 +// Start of programmatically updated variables
 +
 +const allRoutesList = /* %allRoutesList% */["FX2","FX3","FX4","F5","F6","F7","F8","F9","D10","D11","D12","D13","D14","D15","D16","D17","D18","D19","22","28","31","37","38","39","43","48","70","74","91","101","102","103","104","105","106","107","108","109","110","111","112","220","223","224","330","332","334","336","440","442","444","446","551","552","556","557","558","641","642","649","650","662","664","671","672","676","677","678","679","680","690","691","694","833","881","883","884","885","886","887","888","889","895","BLUE"]/* %allRoutesList% */.map((el) => ({route: el}));
@@ -54,19 +54,44 @@
 +        day: "2-digit",
 +    }).format(new Date(date.getTime() - 3 * 60 * 60 * 1000));
 +}
++function formatRunCode(run) {
++    if (!run.split("-").every((str) => /^[0-9]+$/.test(str))) {
++        return;
++    }
++    switch (run.split("-").length) {
++        case 3:
++            return run;
++        case 2:
++            const date = new Date();
++            date.setHours(date.getHours() - 3);
++            switch (date.getDay()) {
++                case 1:
++                case 2:
++                case 3:
++                case 4:
++                case 5:
++                    return "1-" + run;
++                case 6:
++                    return "2-" + run;
++                case 0:
++                    return "3-" + run;
++            }
++    }
++}
 +const shortenedBusModels = { "D30LF": "L3", "D40LF": "L4", "D40LFR": "R4", "XD40": "D4", "XE40": "E4", "XHE40": "H4", "XD60": "D6", "XE60": "E6", "XHE60": "H6" }
 +function busModelById(busId, allInfo = false) {
 +    const data = busModelsById[busId];
 +    return allInfo ? `${data.year}\u00A0${data.model}\u00A0#${busId}` : `${shortenedBusModels[data.model] || data.model}\u00A0${busId}`;
 +}
 +window.customTrackerVehicleData = {};
++window.customTrackerFormattedRun = Symbol();
 +
 +// End of custom global objects
 +
  var __BUNDLE_START_TIME__ = globalThis.nativePerformanceNow ? nativePerformanceNow() : Date.now()
    , __DEV__ = false
    , process = globalThis.process || {}
-@@ -87284,10 +87348,83 @@
+@@ -87284,10 +87373,83 @@
                                  d.request_content_type = m.get("Content-Type"),
                                  t.autoInstrument.networkRequestHeaders && (d.request_headers = t.fetchHeaders(m, t.autoInstrument.networkRequestHeaders))
                              }
@@ -151,7 +176,7 @@
                                  d.end_time_ms = n.now(),
                                  d.status_code = e.status,
                                  d.response_content_type = e.headers.get("Content-Type");
-@@ -161767,7 +161904,7 @@
+@@ -161767,7 +161929,7 @@
          u.default)().add(15, "minutes");
          d.locale(o),
          d.isBefore(f) ? c.visual = (0,
@@ -160,7 +185,7 @@
          u.default)()) ? c.visual = (0,
          l.t)("common:time.due") : n && d.isBefore(p) ? c.visual = d.toNow(!0) : c.visual = d.format(s.DATE_TIME_FORMATS[o][a].time);
          let y = new RegExp((0,
-@@ -161775,7 +161912,7 @@
+@@ -161775,7 +161937,7 @@
            , b = new RegExp((0,
          l.t)("common:time.due"),"gi")
            , v = new RegExp((0,
@@ -169,7 +194,7 @@
          return c.visual.match(y) ? c.a11y = (0,
          l.t)("stops:schedules.departs_in", {
              time: c.visual
-@@ -240442,14 +240579,22 @@
+@@ -240442,14 +240604,22 @@
              const c = "\n      background-color: ".concat(n || "#ffffff", ";\n      border-color: ").concat(A || "#d9d9d9", ";\n      border-width: 1px;\n      border-style: solid;\n      border-radius: 4px;\n    ");
              return "\n      <div style=\"font-weight: 700;\n                  font-family: 'Source Sans 3', 'sans-serif';\n                  text-align: center;\n                  color: ".concat(e || "#000000", ";\n                  padding: ").concat(o ? 0 : 5, "px;\n                  font-size: 15px;\n                  min-width: ").concat(o ? 15 : 18, "px;\n                  min-height: ").concat(o ? 15 : 18, "px;\n                  line-height: ").concat(o ? 16 : 18, "px;\n                  ").concat(o ? "" : c, '"\n      >\n        ').concat(t, "\n      </div>\n    ")
          }
@@ -194,7 +219,7 @@
                  backgroundColor: p.badgeStyle.backgroundColor,
                  borderColor: p.badgeStyle.color,
                  color: p.badgeStyle.color,
-@@ -240482,11 +240627,19 @@
+@@ -240482,11 +240652,19 @@
                  busPath: x
              }
          }
@@ -216,7 +241,7 @@
                  route: u,
                  variant: x
              }) : '\n        <div style="font-size: 13px; font-weight: bold; margin: 0 auto 0 auto; text-align: center;">\n          '.concat((0,
-@@ -240501,11 +240654,12 @@
+@@ -240501,11 +240679,12 @@
              }
              )(), "\n            \n            \x3c!--  Bus features section  --\x3e\n            ").concat(this._busMarkerFeaturesHTMLString(Object.assign({}, w, {
                  fillColor: o.textPrimary
@@ -231,7 +256,7 @@
              }), "\n            ").concat(h ? "" : this._offlineWarningSVGDiv({
                  ColorCodes: o,
                  marginTop: "0px",
-@@ -240540,10 +240694,10 @@
+@@ -240540,10 +240719,10 @@
              o += "bus-".concat(t),
              o
          }
@@ -244,7 +269,7 @@
          }
          static _busMarkerRouteHTMLString({route: t, variant: n}) {
              return '\n      <div>\n        <div>\n          <div style="display: flex; flex-direction: row; flex: 1; flex-wrap: wrap; justify-content: center">\n            <div style="display: flex; flex-direction: row; flex: 0; margin: 0 8px 0 0; padding: 0; max-height: 18px;">\n              '.concat(this.createRouteMarkerIcon({
-@@ -240580,7 +240734,7 @@
+@@ -240580,7 +240759,7 @@
          static _busMarkerFeaturesHTMLString({bikeRack: t, wheelchairSecurement: n, fillColor: A}) {
              return t || n ? "\n      <div>\n        ".concat(t ? this._bikeSVG(A) : "", "\n        ").concat(n ? this._wheelchairSecurementSVG(A) : "", "\n      </div>\n    ") : ""
          }
@@ -253,7 +278,7 @@
              let l, h = Math.abs((0,
              s.default)().diff((0,
              s.default)(t), "minutes", !0));
-@@ -240594,10 +240748,11 @@
+@@ -240594,10 +240773,11 @@
                      time_in_min: t
                  })
              } else {
@@ -268,7 +293,7 @@
              }
              return '\n      <p style="font-size: 11px; margin: 0; padding: 0 4px 0 0; flex: 1 1 auto; min-width: 0; text-align: left;">'.concat(l, "</p>\n    ")
          }
-@@ -244364,7 +244519,7 @@
+@@ -244364,7 +244544,7 @@
          null != o && (b.push(o),
          _.live = o),
          null != p && (b.push(p),
@@ -277,7 +302,16 @@
          (0,
          t.apiRequest)("".concat(c, "/schedule?").concat((0,
          t.buildQueryUrl)(_)), {}, b)
-@@ -245355,7 +245510,8 @@
+@@ -244374,7 +244554,7 @@
+     t.buildQueryUrl)({
+         trip_ids: JSON.stringify(e)
+     })), {}, [e])
+-      , o = e => (0,
++      , o = e => e.includes("-") ? Promise.resolve({ valid: !!formatRunCode(e) }) : (0,
+     t.apiRequest)("".concat(c, "/check_bus/").concat(e), {}, [e])
+       , p = e => (0,
+     t.apiRequest)("".concat(c, "/load_bus_by_trip/").concat(e), {}, [e]);
+@@ -245355,7 +245535,8 @@
      var l = r(d[0])
        , c = r(d[1])
        , s = r(d[2]);
@@ -287,7 +321,7 @@
          const {liveVehicles: D} = (0,
          c.useLiveVehiclesSetting)()
            , {busLocMarkersError: y, busLocMarkersData: R, busLocMarkersDataRef: I} = (0,
-@@ -245405,7 +245561,7 @@
+@@ -245405,7 +245586,7 @@
              subError: E,
              vehicleTripError: B,
              vehicleTripData: O,
@@ -296,7 +330,7 @@
              enableVehicleTripPathPreview: T
          }),
          {
-@@ -245422,7 +245578,7 @@
+@@ -245422,7 +245603,7 @@
              isVehiclePastScheduledStop: j,
              appendVehicleMapMarkers: K,
              refreshActiveVehicles: w.refreshActiveVehicles,
@@ -305,7 +339,7 @@
          }
      }
  }
-@@ -245526,10 +245682,13 @@
+@@ -245526,10 +245707,13 @@
            , R = (0,
          t.useCallback)(( (e, t) => {
              let s;
@@ -320,7 +354,7 @@
              t.variant = v.variant,
              t.busFeatures = (null == v ? void 0 : v.busFeatures) || {},
              t.locale = L,
-@@ -245580,6 +245739,7 @@
+@@ -245580,6 +245764,7 @@
                      busId: s,
                      tripId: c.tripId,
                      routeId: c.routeId,
@@ -328,15 +362,18 @@
                      position: c.positions[0].position,
                      lastUpdated: c.updatedAt,
                      inService: c.inService,
-@@ -245587,11 +245747,44 @@
+@@ -245587,11 +245772,47 @@
                      busPath: c.busPath,
                      busScheduledStopTime: c.inService && null != t && t[s] ? t[s] : null
                  };
-+                if (c.busMarkerData.type === "dart") {
++                if (l.runId === window.customTrackerFormattedRun) {
++                    window.location.replace("https://winnipegtransit.com/onthego/live?busId=" + l.busId);
++                }
++                if (l.busMarkerData.type === "dart") {
 +                    window.customTrackerPatchedTrips ??= {};
-+                    window.customTrackerPatchedTrips[c.tripId] = {
-+                        routeId: c.routeId,
-+                        badgeStyle: c.busMarkerData.badgeStyle
++                    window.customTrackerPatchedTrips[l.tripId] = {
++                        routeId: l.routeId,
++                        badgeStyle: l.busMarkerData.badgeStyle
 +                    };
 +                }
                  U(s, c, l),
@@ -374,7 +411,7 @@
          }
          ), [h, y, U, A, R, w, b]);
          return {
-@@ -245650,15 +245843,71 @@
+@@ -245650,15 +245871,79 @@
          l.useMemo)(( () => !p || v), [p, v]);
          let Q = (0,
          l.useMemo)(( () => (0,
@@ -388,7 +425,7 @@
 -        })), [_, j]);
 +        l.useMemo)(( () => {
 +            const params = new URLSearchParams(window.location.search);
-+            const vehiclesParam = "show-vehicles", routesParam = "show-routes";
++            const vehiclesParam = "show-vehicles", routesParam = "show-routes", runParam = "run-redir";
 +            // Route list from https://winnipegtransit.com/api/v2/routes
 +            const queryEverything = { queries: allRoutesList };
 +            if (window.location.pathname.startsWith("/routes/") && params.has(vehiclesParam)) {
@@ -424,6 +461,14 @@
 +                } else {
 +                    return { queries: routes.split(",").map((el) => ({ route: el.toUpperCase() })) }
 +                }
++            } else if (window.location.pathname.startsWith("/routes/") && params.has(runParam)) {
++                const run = formatRunCode(params.get(runParam));
++                if (!run) {
++                    alert(`Invalid run code "${params.get(runParam)}"`);
++                    debugger;
++                }
++                window.customTrackerFormattedRun = run;
++                return queryEverything;
 +            } else {
 +                return {
 +                    queries: j.map((t => ({
@@ -452,7 +497,7 @@
              const {data: s, error: u} = t || {};
              null != s && s.vehicleUpdates && !u ? (q(null),
              D(null),
-@@ -245918,10 +246167,11 @@
+@@ -245918,10 +246203,11 @@
          }
          ), [N, T, P, f, W, K, s])
            , Y = (0,
@@ -465,7 +510,7 @@
              y.current[e.key].updatedAt = n,
              y.current[e.key].deviation = s,
              null != t && t.key && null != l && l.key ? (y.current[e.key].busMarkerData = c.current[l.key],
-@@ -245951,10 +246201,6 @@
+@@ -245951,10 +246237,6 @@
              const {vehicle: t, trip: l, route: s, path: h, ts: f} = e || {};
              if (null == t || !t.key || 0 === (h || []).length || !f || !c.current.hasOwnProperty(null == s ? void 0 : s.key))
                  return;
@@ -476,7 +521,7 @@
              if (k) {
                  const e = (o || []).find(( ({id: e}) => e === t.key));
                  if (!e || e.tripId !== (null == l ? void 0 : l.key))
-@@ -246003,7 +246249,7 @@
+@@ -246003,7 +246285,7 @@
              clearSelectedVehicle: K,
              resetVehicleMarkers: X,
              upsertVehicleMarker: Z,
@@ -485,7 +530,7 @@
              refreshActiveVehicles: W,
              setSelectedVehicleInService: G
          }
-@@ -246255,10 +246501,11 @@
+@@ -246255,10 +246537,11 @@
          }
          ), [c, l]))
      }
@@ -499,7 +544,7 @@
          (0,
          t.useFocusEffect)((0,
          n.useCallback)(( () => {
-@@ -246283,8 +246530,8 @@
+@@ -246283,8 +246566,8 @@
                  b())
              }
              ;
@@ -510,7 +555,7 @@
              () => {
                  null != p.current && clearInterval(p.current)
              }
-@@ -247022,7 +247269,7 @@
+@@ -247022,7 +247305,7 @@
            , $ = (0,
          u.useQuery)(["stopRoutes", _, Z, L], ( () => (0,
          n.routes)(_, K && L === T.schedule ? {
@@ -519,7 +564,7 @@
          } : {})), {
              enabled: !!z.data
          })
-@@ -247657,7 +247904,7 @@
+@@ -247657,7 +247940,7 @@
                  prefix: "far",
                  iconName: "clock",
                  text: p("trips:schedule:eta", {
@@ -528,7 +573,7 @@
                  }),
                  style: u
              })]
-@@ -248223,7 +248470,7 @@
+@@ -248223,7 +248506,7 @@
                      focusable: !0,
                      accessibilityLabel: v
                  },
@@ -537,7 +582,7 @@
                  left: () => (0,
                  y.jsx)(c.default, {
                      importantForAccessibility: "no-hide-descendants",
-@@ -249128,7 +249375,7 @@
+@@ -249128,7 +249411,7 @@
          (0,
          s.useEffect)(( () => {
              const {isLoading: e, isError: t, isFetching: n, isSuccess: o, data: i, error: s} = qe;
@@ -546,7 +591,7 @@
              Te(i.nextTripId),
              U.current = U.current + 1,
              we(!0))
-@@ -354328,7 +354575,7 @@
+@@ -354328,7 +354611,7 @@
              clearSelectedVehicleOnDependencies: Se,
              persistentVehicleMarkersRef: A,
              expectedBusesTripInfo: fe.expectedBusesTripInfo,
@@ -555,7 +600,7 @@
              enableVehicleTripPathPreview: !0
          })
            , Ve = (0,
-@@ -355177,8 +355424,8 @@
+@@ -355177,8 +355460,8 @@
        , V = r(d[35])
        , z = r(d[36])
        , W = r(d[37]);
@@ -566,7 +611,7 @@
      (0,
      f.schedule)(e, t))
        , K = () => {
-@@ -355210,14 +355457,14 @@
+@@ -355210,14 +355493,14 @@
          S.useInfiniteQuery)(["stopSchedule", n, w], ( ({pageParam: e}) => q(n, {
              start_time: e
          })), {
@@ -583,7 +628,7 @@
              }
              )(e, 0, C)
          })
-@@ -355368,7 +355615,11 @@
+@@ -355368,7 +355651,11 @@
                      setForceOpenTimepicker: L,
                      endOfBookingReachedError: h,
                      isInitialBusSyncRef: l
@@ -596,7 +641,7 @@
              })
          }
      }
-@@ -355618,7 +355869,7 @@
+@@ -355618,7 +355905,7 @@
          const u = 0 === t ? J : s.default.Fragment;
          let p = () => (0,
          W.jsx)(W.Fragment, {});
@@ -605,7 +650,7 @@
              (i ? (0,
              o.default)() : (0,
              o.default)(c)).add(1, "hour").isSameOrBefore((0,
-@@ -355815,7 +356066,7 @@
+@@ -355815,7 +356102,7 @@
                  accessibilityHint: se,
                  children: (0,
                  B.jsx)(u.AccessibleCardTitle, {
@@ -614,7 +659,7 @@
                      subtitle: e.name,
                      titleNumberOfLines: 2,
                      subtitleNumberOfLines: 1,
-@@ -356541,9 +356792,9 @@
+@@ -356541,9 +356828,9 @@
          T.jsx)(o.TimeFilterChip, {
              alignment: s.MODAL_ALIGNMENT.topLeft,
              timeFilterNow: p,
@@ -626,7 +671,7 @@
              setTimeFilterToNow: y,
              a11yLabel: N,
              closeA11yLabel: x,
-@@ -361355,7 +361606,7 @@
+@@ -361355,7 +361642,7 @@
          var o = Math.asin(1 / (a = Math.max(1, a))) * (c /= n);
          function s(n) {
              return a * (0,
@@ -635,7 +680,7 @@
          }
          return s.amplitude = function(t) {
              return u(t, c * n)
-@@ -401319,7 +401570,7 @@
+@@ -401319,7 +401606,7 @@
          })
            , we = (0,
          o.useMemo)(( () => [le, ie]), [le, ie])
@@ -644,7 +689,7 @@
          i.useLiveVehicleWatcher)({
              DynamicMapContext: p.RoutesMapContext,
              mapReady: J,
-@@ -401440,12 +401691,10 @@
+@@ -401440,12 +401727,10 @@
                  let n = e[t];
                  if (!je.current.hasOwnProperty(n))
                      continue;
@@ -658,7 +703,61 @@
          (0,
          i.useMarkersWatcher)({
              mapReady: J,
-@@ -414102,7 +414351,7 @@
+@@ -404711,23 +404996,26 @@
+                         style: E.busNumberInputContainer,
+                         children: (0,
+                         I.jsx)(s.TextInput, {
+-                            maxLength: 3,
+-                            keyboardType: "numeric",
++                            keyboardType: "numbers-and-punctuation",
+                             dense: !0,
+                             underlineColor: "transparent",
+                             style: E.busNumberInput,
+                             placeholder: k("onthego:enter_bus_number"),
+                             accessibilityLabel: k("onthego:enter_bus_number"),
+                             onChangeText: e => {
+-                                A(e.replace(/[^0-9]/g, ""))
++                                A(e.replace(/[^0-9-]/g, ""))
+                             }
+                             ,
+                             onSubmitEditing: () => {
+-                                D || L.navigate("OnTheGoLive", {
+-                                    busId: O
+-                                }, {
+-                                    pop: !0
+-                                })
++                                if (O.includes("-")) {
++                                    window.location.href = "https://winnipegtransit.com/routes/customtracker/details?run-redir=" + O;
++                                } else if (!D) {
++                                    L.navigate("OnTheGoLive", {
++                                        busId: O
++                                    }, {
++                                        pop: !0
++                                    })
++                                }
+                             }
+                             ,
+                             value: O
+@@ -404745,7 +405033,7 @@
+                 I.jsx)(j.Web, {
+                     children: (0,
+                     I.jsx)(c.LinkButton, Object.assign({
+-                        to: "/onthego/live?".concat((0,
++                        to: O.includes("-") ? "/routes/customtracker/details?run-redir=" + O : "/onthego/live?".concat((0,
+                         b.buildQueryUrl)({
+                             busId: O
+                         }))
+@@ -404757,6 +405045,9 @@
+                     children: (0,
+                     I.jsx)(S.Button, Object.assign({}, F, {
+                         onPress: () => {
++                            if (O.includes("-")) {
++                                window.location.href = "https://winnipegtransit.com/routes/customtracker/details?run-redir=" + O;
++                            }
+                             L.replace("OnTheGoLive", {
+                                 busId: O
+                             })
+@@ -414102,7 +414393,7 @@
                      children: e
                  })
              }
@@ -667,7 +766,7 @@
                  var de, ue;
                  let t;
                  q.length > 0 && (t = q[q.length - 1]);
-@@ -414319,7 +414568,7 @@
+@@ -414319,7 +414610,7 @@
          x.useLocaleSetting)()
            , {tripDestination: I, upcomingScheduledStops: j} = (0,
          t.useContext)(u.OnTheGoTripScheduleContext)
@@ -676,7 +775,7 @@
            , P = o.default.create({
              textMuted: {
                  fontSize: 16,
-@@ -414339,7 +414588,7 @@
+@@ -414339,7 +414630,7 @@
              time: (0,
              c.scheduleDepartureTime)(C.estimatedTime, {
                  locale: b
@@ -685,7 +784,7 @@
          });
          if (h) {
              const e = j.findIndex((e => e.stopId === C.stopId));
-@@ -414351,10 +414600,15 @@
+@@ -414351,10 +414642,15 @@
                  M = "".concat(M, " (").concat(t, ")")
              }
          }

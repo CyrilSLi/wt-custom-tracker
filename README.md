@@ -20,6 +20,7 @@ A patch for the Winnipeg Transit web app which improves the functionality of the
 - Show how late or early a bus is on its bus icon and its On the Go page, calculated as the difference between scheduled and estimated stop times.
 - When using On the Go, continuously update the "Next stop" section with the bus's next stop instead of remaining static after the page loads.
 - When using On the Go, add buttons for "Previous trip" and "Next trip" similar to when using the Trip Schedules page.
+- Add support for using On the Go with a run code, provided a bus is currently operating that run and has live location data.
 - Display the actual scheduled/live arrival times for past stops, instead of just displaying "Past".
 - Add a live tracker of all buses in the system (or a specific list of fleet numbers) on a map, for example:
     - [https://winnipegtransit.com/routes/customtracker/details?show-vehicles=all](https://winnipegtransit.com/routes/customtracker/details?show-vehicles=all): Track all vehicles in the system, including On-Request and work buses when they are active.
