@@ -25,7 +25,18 @@ sort_routes = lambda route: re.sub(r"[a-zA-Z]", "", route).rjust(10, "0") if any
 update_variable("allRoutesList", sorted((route["id"] for route in routes), key=sort_routes))
 
 models_by_id = []
-wiki_page = bs4.BeautifulSoup(r.get("https://cptdb.ca/wiki/api.php?action=parse&page=Winnipeg_Transit&prop=text&format=json").json()["parse"]["text"]["*"], "html.parser")
+try:
+    wiki_json = r.get("https://cptdb.ca/wiki/api.php?action=parse&page=Winnipeg_Transit&prop=text&format=json").json()
+except Exception as e:
+    input(
+        "\nFailed to fetch fleet data from CPTDB wiki. Please go to"
+        "\nhttps://cptdb.ca/wiki/api.php?action=parse&page=Winnipeg_Transit&prop=text&format=json"
+        "\nand save the response in the project directory. Press Enter to continue..."
+    )
+    with open(os.path.join(os.path.dirname(__file__), "api.php")) as f:
+        wiki_json = json.load(f)
+
+wiki_page = bs4.BeautifulSoup(wiki_json["parse"]["text"]["*"], "html.parser")
 fleet_table = wiki_page.find_all("th", string=re.compile(r"fleet number", re.IGNORECASE))[0]
 while fleet_table.name != "table":
     fleet_table = fleet_table.parent

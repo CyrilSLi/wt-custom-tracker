@@ -6,3 +6,4 @@ index*.js
 
 index-js-rebuilt/*
 !index-js-rebuilt/.gitkeep
+scripts/api.php
