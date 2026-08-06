@@ -54,7 +54,7 @@ Use the following steps to install the patch on a mobile device browser:
 
 **IMPORTANT**: Check this page every time **before using the WT web app**. If the "Status" section shows "update required", you must enable ProxyPin and refresh the page to install the latest patch. If you do not do so, a new unpatched version will be loaded and you must [clear your browser data](https://support.google.com/chrome/answer/2392709?hl=en) before you can install the patch again.
 
-You do not need to check this page before using a link from the [Link Generator](https://cyrilsli.github.io/wt-custom-tracker#link-generator), as they will redirect you to this page first if your patch is out of date.
+You do not need to check this page before using a link from the [Link Generator](https://cyrilsli.github.io/wt-custom-tracker/#link-generator), as they will redirect you to this page first if your patch is out of date.
 
 ### Desktop Installation
 
