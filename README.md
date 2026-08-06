@@ -39,25 +39,23 @@ A patch for the Winnipeg Transit web app which improves the functionality of the
 
 ## Installation
 
-### Generating the patched JavaScript file
+### Mobile Installation
 
-This project only includes a patch file to avoid potential copyright issues with distributing the Winnipeg Transit app's source code. To generate the patched JavaScript file, follow these steps:
+Use the following steps to install the patch on a mobile device browser:
 
-1. System requirements:
-    - Unix-like operating system (e.g. Linux, macOS, WSL on Windows)
-    - The most recent version of a Chromium-based web browser (only Chromium has been tested)
-2. Clone this repository and navigate to the project directory:
-```bash
-git clone https://github.com/CyrilSLi/wt-websocket-tracker
-cd wt-websocket-tracker
-```
-3. Open a new Chromium browser tab and navigate to [https://winnipegtransit.com](https://winnipegtransit.com).
-4. Open developer tools (F12), and navigate to the "Sources" tab. Find the JavaScript file in the list of sources as shown below:
-```
-- Top
-  - winnipegtransit.com
-    - _expo/static/js/web
-      - index-[alphanumeric hash].js
-```
-5. Open the JavaScript file, ensuring that the "Pretty print" option is enabled (the `{}` button at the bottom left of the code viewer should be active). Copy the entire contents of the file (Ctrl+A, then Ctrl+C).
-6. Create a new file in the project directory (the same directory as `wtpatch`) named `index.js`, and paste the contents of the JavaScript file from the developer tools into it.
+1. Install ProxyPin ([iOS](https://apps.apple.com/app/proxypin/id6450932949), [Android](https://play.google.com/store/apps/details?id=com.network.proxy), [GitHub](https://github.com/wanghongenpin/proxypin)) and follow its instructions to set up a proxy server on your device, including installing the CA certificate.
+2. Download [proxypin-scripts.json](https://github.com/cyrilsli/wt-custom-tracker/releases/latest/download/proxypin-scripts.json), a configuration file for ProxyPin.
+3. Open ProxyPin, and go to the "Configuration" tab (document icon).
+4. Go to "Script", ensure "Enable Script" is on, and tap "Import" to import the downloaded `proxypin-scripts.json` file.
+5. Go to the main tab (three circles icon) and tap the play button to start the proxy server.
+6. Reload this page in your browser to install the patch. You will be redirected to the WT web app and back to this page after the patch is installed.
+7. Turn off the proxy server in ProxyPin by tapping the stop button on the main tab, then exit the app.
+8. ProxyPin does not need to be running to use the patched WT web app, but it must be running **BEFORE** you access an updated version of the web app (see below).
+
+**IMPORTANT**: Check this page every time **before using the WT web app**. If the "Status" section shows "update required", you must enable ProxyPin and refresh the page to install the latest patch. If you do not do so, a new unpatched version will be loaded and you must [clear your browser data](https://support.google.com/chrome/answer/2392709?hl=en) before you can install the patch again.
+
+You do not need to check this page before using a link from the [Link Generator](https://cyrilsli.github.io/wt-custom-tracker/#link-generator), as they will redirect you to this page first if your patch is out of date.
+
+### Desktop Installation
+
+TBD

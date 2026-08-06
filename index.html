@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winnipeg Transit Custom Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked@18/lib/marked.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epoxy-tls-polyfill@1/dist/javascript.min.js"></script>
+    <style>
+        #status p:not(:last-child) {
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Winnipeg Transit Custom Tracker</h1>
+    </header>
+    <main>
+        <h2>Status</h2>
+        <article id="status">
+            <p id="status-loading">Loading status...</p>
+        </article>
+        <h2 id="link-generator">Link Generator</h2>
+        <article>
+            <p>Generate a link to track specific vehicles or routes.</p>
+            <label for="track-list">Enter a comma-separated list of vehicle numbers (ranges allowed) or route numbers, for example "123,456-478" or "BLUE,D10,22" </label>
+            <input type="text" id="track-list" placeholder="e.g. 123,456-478 or BLUE,D10,22">
+            <fieldset role="group">
+                <fieldset>
+                    <label for="track-vehicles">
+                        <input type="radio" name="tracking-type" id="track-vehicles" value="vehicles" checked>
+                        Vehicles
+                    </label>
+                    <label for="track-routes">
+                        <input type="radio" name="tracking-type" id="track-routes" value="routes">
+                        Routes
+                    </label>
+                </fieldset>
+                <label for="include-stale">
+                    <input type="checkbox" id="include-stale" checked>
+                    Include vehicles with stale live data?
+                </label>
+            </fieldset>
+            <p id="generated-link"></p>
+        </article>
+        <h2>Readme</h2>
+        <section id="readme">
+            <p>Loading the README...</p>
+        </section>
+    </main>
+    <script>
+        function displayStatus(message, color) {
+            document.getElementById("status").innerHTML += color ? `<p><b style="color: ${color};">${message}</b></p>` : `<p>${message}</p>`;
+        }
+        function failedStatus(error) {
+            console.error(error);
+            document.getElementById("status").innerHTML = "";
+            displayStatus("Failed to load status.", "red");
+            displayStatus(error);
+            displayStatus(error.stack);
+        }
+
+        (async () => {
+            let appVersion = fetch("https://winnipegtransit.com")
+                .then(res => res.text())
+                .then(html => {
+                    return new DOMParser().parseFromString(html, "text/html")
+                        .querySelector('script[src*="_expo/static/js/web"]').getAttribute("src") + "?";
+                })
+                .catch(failedStatus);
+
+            let patchVersion = fetch("https://raw.githubusercontent.com/CyrilSLi/wt-custom-tracker/refs/heads/main/index-js-patch.js")
+                .then(res => res.text())
+                .then(js => {
+                    return js.match(/const patchVersion = "(\S+)"/)[1];
+                })
+                .catch(failedStatus);
+
+            [appVersion, patchVersion] = await Promise.all([appVersion, patchVersion]);
+            if (appVersion ===appVersion && patchVersion === patchVersion) {
+                displayStatus("The patch file is up to date!", "green");
+            } else {
+                displayStatus("The patch file is outdated, please contact the developer to update.", "orange");
+            }
+
+            let proxypinActive;
+            const installationCheck = await _epoxyPolyfillOrigFetch("https://winnipegtransit.com/_expo/static/js/web/index-custom-script-installation-check.js?t=" + Date.now())
+                .catch(e => {
+                    displayStatus("ProxyPin is not installed or inactive.", "orange");
+                    proxypinActive = false;
+                });
+            if (proxypinActive !== false) {
+                if (installationCheck.ok && await installationCheck.text() === "OK") {
+                    displayStatus("ProxyPin is installed and active!", "green");
+                    proxypinActive = true;
+                } else {
+                    displayStatus("ProxyPin encountered an error.", "red");
+                    proxypinActive = false;
+                }
+            }
+
+            const cachedVersion = localStorage.getItem("custom-tracker-cached-version");
+            if (cachedVersion !== appVersion) {
+                if (proxypinActive) {
+                    localStorage.setItem("custom-tracker-cached-version", appVersion);
+                    window.location.replace(`https://winnipegtransit.com/?install-redirect=${encodeURIComponent(window.location.href)}`);
+                } else {
+                    displayStatus(`Mobile update required: Please <a href="#mobile-installation">enable ProxyPin</a> and refresh this page. Ignore this message if you are using a desktop browser.`, "red");
+                }
+            } else {
+                displayStatus("The custom tracker is installed and up to date!", "green");
+            }
+
+            document.getElementById("status-loading").remove();
+            const stripVersion = (version) => version.match(/index-(\S+)\./)[1];
+            document.getElementById("status").innerHTML += `
+                <footer>
+                    <small>app&nbsp;${stripVersion(appVersion)}, patch&nbsp;${stripVersion(patchVersion)}${cachedVersion ? `, cached&nbsp;${stripVersion(cachedVersion)}` : ""}</small>
+                </footer>
+            `;
+        })();
+
+        window._epoxyPolyfillOrigFetch("https://raw.githubusercontent.com/CyrilSLi/wt-custom-tracker/refs/heads/main/README.md")
+            .then(res => res.text())
+            .then(res => {
+                const readmeEl = document.getElementById("readme");
+                readmeEl.innerHTML = marked.parse(res);
+                readmeEl.querySelectorAll("h1").forEach(el => el.remove());
+                readmeEl.querySelectorAll("h2, h3").forEach(el => el.id = el.textContent.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, ""));
+                readmeEl.querySelectorAll("a").forEach(el => el.setAttribute("target", "_blank"));
+            })
+            .catch(error => {
+                console.error("Error fetching README.md:", error);
+                document.getElementById("readme").innerHTML = "<p>Error loading README.md</p>";
+            });
+    </script>
+</body>
+</html>
