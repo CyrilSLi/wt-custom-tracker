@@ -107,7 +107,7 @@
                     localStorage.setItem("custom-tracker-cached-version", appVersion);
                     window.location.replace(`https://winnipegtransit.com/?install-redirect=${encodeURIComponent(window.location.href)}`);
                 } else {
-                    displayStatus(`Mobile update required: Please <a href="#mobile-installation">enable ProxyPin</a> and refresh this page. Ignore this message if you are using a desktop browser.`, "red");
+                    displayStatus(`Mobile update required: Please <a href="#mobile-installation">enable&nbsp;ProxyPin</a> and refresh this page. Ignore this message if you are using a desktop browser.`, "red");
                 }
             } else {
                 displayStatus("The custom tracker is installed and up to date!", "green");
@@ -129,7 +129,10 @@
                 readmeEl.innerHTML = marked.parse(res);
                 readmeEl.querySelectorAll("h1").forEach(el => el.remove());
                 readmeEl.querySelectorAll("h2, h3").forEach(el => el.id = el.textContent.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, ""));
-                readmeEl.querySelectorAll("a").forEach(el => el.setAttribute("target", "_blank"));
+                readmeEl.querySelectorAll("a").forEach(el => {
+                    el.setAttribute("target", "_blank");
+                    el.href = el.href.replace(`${window.location.href}#`, "#");
+                });
             })
             .catch(error => {
                 console.error("Error fetching README.md:", error);
