@@ -30,6 +30,7 @@ apply_patch() {
         echo "Patch applied successfully."
         rm -f "$PATCHED_FILE.rej"
         rm -f "$PATCHED_FILE.orig"
+        verify_patch
     else
         echo "ERROR: Failed to apply patch, check $PATCHED_FILE.rej for details."
         exit 1
