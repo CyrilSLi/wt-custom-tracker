@@ -50,7 +50,8 @@ Use the following steps to install the patch on a mobile device browser:
 5. Go to the main tab (three circles icon) and tap the play button to start the proxy server.
 6. Reload this page in your browser to install the patch. You will be redirected to the WT web app and back to this page after the patch is installed.
 7. Turn off the proxy server in ProxyPin by tapping the stop button on the main tab, then exit the app.
-8. ProxyPin does not need to be running to use the patched WT web app, but it must be running **BEFORE** you access an updated version of the web app (see below).
+8. Feel free to clear ProxyPin's history (by tapping the trash can icon on the main tab) to improve its performance.
+9. ProxyPin does not need to be running to use the patched WT web app, but it must be running **BEFORE** you access an updated version of the web app (see below).
 
 **IMPORTANT**: Check this page every time **before using the WT web app**. If the "Status" section shows "update required", you must enable ProxyPin and refresh the page to install the latest patch. If you do not do so, a new unpatched version will be loaded and you must [clear your browser data](https://support.google.com/chrome/answer/2392709?hl=en) before you can install the patch again.
 
@@ -58,4 +59,17 @@ You do not need to check this page before using a link from the [Link Generator]
 
 ### Desktop Installation
 
-TBD
+Use the following steps to install the patch on a desktop browser:
+
+**IMPORTANT**: After a new version of the WT web app is released you must follow the steps below to reinstall the patch. You **do not** need to clear your browser data.
+
+1. Open [https://winnipegtransit.com/](https://winnipegtransit.com/) in a new browser tab.
+2. Open Developer Tools (usually by pressing F12 or Ctrl+Shift+I) and go to the "Network" tab.
+3. Type `index` in the filter box, then reload the WT web app page.
+4. There should be a single request shown, override its content (on Chrome, right-click the request and select "Override content").
+5. **If you are updating from a previous version**: Apart from the currently selected or highlighted file, delete all other overridden files under the `winnipegtransit.com` folder starting with `index-`.
+6. Select all the content of the overridden `index.js` file and delete it, leaving it empty.
+7. Open [index-js-patch.js](https://raw.githubusercontent.com/CyrilSLi/wt-custom-tracker/refs/heads/main/index-js-patch.js) in a new tab, copy all of its contents, and paste it into the overridden `index.js` file.
+8. Save the changes to the overridden `index.js` file.
+
+**IMPORTANT**: You must have Developer Tools open on a tab before you can access the patched WT web app. You can still use the unpatched WT web app without Developer Tools open. You can uncheck "Disable cache" in the Network tab of Developer Tools to improve performance.
