@@ -130,8 +130,11 @@
                 readmeEl.querySelectorAll("h1").forEach(el => el.remove());
                 readmeEl.querySelectorAll("h2, h3").forEach(el => el.id = el.textContent.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, ""));
                 readmeEl.querySelectorAll("a").forEach(el => {
-                    el.setAttribute("target", "_blank");
-                    el.href = el.href.replace(`${window.location.href}#`, "#");
+                    if (el.href.includes(`${window.location.href}#`)) {
+                        el.href = el.href.replace(`${window.location.href}#`, "#");
+                    } else {
+                        el.setAttribute("target", "_blank");
+                    }
                 });
             })
             .catch(error => {
