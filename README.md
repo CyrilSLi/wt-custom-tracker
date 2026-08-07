@@ -66,15 +66,19 @@ A patch for the Winnipeg Transit web app which improves the functionality of the
 
 Use the following steps to install the patch on a mobile device browser:
 
-1. Install ProxyPin ([iOS](https://apps.apple.com/app/proxypin/id6450932949), [Android](https://play.google.com/store/apps/details?id=com.network.proxy), [GitHub](https://github.com/wanghongenpin/proxypin)) and follow its instructions to set up a proxy server on your device, including installing the CA certificate.
-2. Download [proxypin-scripts.json](https://github.com/cyrilsli/wt-custom-tracker/releases/latest/download/proxypin-scripts.json), a configuration file for ProxyPin.
-3. Open ProxyPin, and go to the "Configuration" tab (document icon).
-4. Go to "Script", ensure "Enable Script" is on, and tap "Import" to import the downloaded `proxypin-scripts.json` file.
-5. Go to the main tab (three circles icon) and tap the play button to start the proxy server.
-6. Reload this page in your browser to install the patch. You will be redirected to the WT web app and back to this page after the patch is installed.
-7. Turn off the proxy server in ProxyPin by tapping the stop button on the main tab, then exit the app.
-8. Feel free to clear ProxyPin's history (by tapping the trash can icon on the main tab) to improve its performance.
-9. ProxyPin does not need to be running to use the patched WT web app, but it must be running **BEFORE** you access an updated version of the web app (see below).
+**IMPORTANT**: If you have ever used the WT web app on your mobile device browser, you must clear your browser data for `winnipegtransit.com` before installing the patch. Instructions to do so vary by operating system and browser, please search for "clear specific site data" or similar. You may have to clear everything if your browser does not support clearing data for a specific site, be warned that this will **log you out of all websites** and erase saved website data.
+
+1. Install ProxyPin ([iOS](https://apps.apple.com/app/proxypin/id6450932949), [Android](https://play.google.com/store/apps/details?id=com.network.proxy), [GitHub](https://github.com/wanghongenpin/proxypin)), a local proxy server that allows web requests to be intercepted and modified.
+2. Open ProxyPin settings, tap "HTTPS Proxy", tap "Install Certificate", and follow its instructions to install a CA certificate. This is required to incercept HTTPS requests. On non-rooted Android devices try installing a "User Certificate" if the "System Certificate" option does not work. You may have to restart your device after installing the certificate.
+3. Go back to the "HTTPS Proxy" settings page, and turn on "Enable HTTPS Proxy".
+4. Download [proxypin-scripts.json](https://github.com/cyrilsli/wt-custom-tracker/releases/latest/download/proxypin-scripts.json), a configuration file for ProxyPin.
+5. Open ProxyPin, and go to the "Configuration" tab (document icon).
+6. Go to "Script", ensure "Enable Script" is on, and tap "Import" to import the downloaded `proxypin-scripts.json` file.
+7. Go to the main tab (three circles icon) and tap the play button to start the proxy server.
+8. Reload this page in your browser to install the patch. You will be redirected to the WT web app and back to this page after the patch is installed.
+9. Turn off the proxy server in ProxyPin by tapping the stop button on the main tab, then exit the app.
+10. Feel free to clear ProxyPin's history (by tapping the trash can icon on the main tab) to improve its performance.
+11. ProxyPin does not need to be running to use the patched WT web app, but it must be running **BEFORE** you access an updated version of the web app (see below).
 
 **IMPORTANT**: Check this page every time **before using the WT web app**. If the "Status" section shows "update required", you must enable ProxyPin and refresh the page to install the latest patch. If you do not do so, a new unpatched version will be loaded and you must [clear your browser data](https://support.google.com/chrome/answer/2392709?hl=en) before you can install the patch again.
 
