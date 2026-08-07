@@ -20,6 +20,9 @@
         article:has(#device-desktop:checked) > #link-hint-desktop {
             display: block;
         }
+        #track-list {
+            color: black;
+        }
         #track-list:invalid {
             background-color: lightpink;
         }
@@ -33,7 +36,16 @@
 </head>
 <body>
     <header>
-        <h1>Winnipeg Transit Custom Tracker</h1>
+        <hgroup>
+            <h1>Winnipeg Transit Custom Tracker</h1>
+            <p>A custom patch for the WT web app</p>
+        </hgroup>
+        <nav>
+            <ul>
+                <li><a href="#mobile-installation">Mobile Installation</a></li>
+                <li><a href="#desktop-installation">Desktop Installation</a></li>
+            </ul>
+        </nav>
     </header>
     <main>
         <h2>Status</h2>
