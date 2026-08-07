@@ -5,22 +5,37 @@ A patch for the Winnipeg Transit web app which improves the functionality of the
 ## Features
 
 - Show the run code, fleet number, and vehicle model on:
-  - Bus icons on the map, instead of the route number (e.g. "1-110-1, L3 945" instead of "888"). **Shortened model names**
-    - The full model name in the popup (e.g. "2001 D30LF #938")
-  - Stop schedules, instead of a redundant route name (e.g. "110-1, 2001 D30LF #945" instead of "Tache").
-  - Stop schedule previews, in addition to the route destination (e.g. "Whittier Park (110-1, L3 945)" instead of "Whittier Park"). **Shortened model names**
-  - Fleet numbers and vehicle models are omitted if a bus has not yet been assigned to a run. Run codes are always available.
-  - Shortened model names (model years are omitted due to space constraints):
-    - L3 / L4: D30LF / D40LF
-    - R4: D40LFR
-    - X4 / X6: XD40 / XD60
-    - E4 / E6: XE40 / XE60
-    - H4 / H6: XHE40 / XHE60
+    - Bus icons on the map, instead of the route number (e.g. "1-110-1, L3 945" instead of "888"). **Shortened model names**
+        - The full model name in the popup (e.g. "2001 D30LF #938")
+
+    ![Bus icon](readme-images/bus_icon.png)
+
+    - Stop schedules, instead of a redundant route name (e.g. "110-1, 2001 D30LF #945" instead of "Tache").
+
+    ![Run and vehicle model on stop schedule](readme-images/run_on_schedule.png)
+
+    - Stop schedule previews, in addition to the route destination (e.g. "Whittier Park (110-1, L3 945)" instead of "Whittier Park"). **Shortened model names**
+    - Fleet numbers and vehicle models are omitted if a bus has not yet been assigned to a run. Run codes are always available.
+    - Shortened model names (model years are omitted due to space constraints):
+        - L3 / L4: D30LF / D40LF
+        - R4: D40LFR
+        - X4 / X6: XD40 / XD60
+        - E4 / E6: XE40 / XE60
+        - H4 / H6: XHE40 / XHE60
 - When clicking on a bus icon, add links to [WTLive](https://www.wtlivewpg.com) for the bus's run and the bus history for the vehicle, and to On the Go for the vehicle.
+
+    ![Bus popup with links](readme-images/bus_popup.png)
+
 - Show how late or early a bus is on its bus icon and its On the Go page, calculated as the difference between scheduled and estimated stop times.
 - When using On the Go, continuously update the "Next stop" section with the bus's next stop instead of remaining static after the page loads.
 - When using On the Go, add buttons for "Previous trip" and "Next trip" similar to when using the Trip Schedules page.
+
+    ![Previous and next trip buttons](readme-images/otg_prev_next.png)
+
 - Add support for using On the Go with a run code, provided a bus is currently operating that run and has live location data.
+
+    ![On the Go with a run code](readme-images/otg_with_run.png)
+
 - Display the actual scheduled/live arrival times for past stops, instead of just displaying "Past".
 - Add a live tracker of all buses in the system (or a specific list of fleet numbers) on a map, for example:
     - [https://winnipegtransit.com/routes/customtracker/details?show-vehicles=all](https://winnipegtransit.com/routes/customtracker/details?show-vehicles=all): Track all vehicles in the system, including On-Request and work buses when they are active.
@@ -33,9 +48,17 @@ A patch for the Winnipeg Transit web app which improves the functionality of the
     - [https://winnipegtransit.com/routes/customtracker/details?show-routes=101,102,103,104,105,106,107,108,109,110,111,112](https://winnipegtransit.com/routes/customtracker/details?show-routes=101,102,103,104,105,106,107,108,109,110,111,112): Track all buses serving On-Request zones (routes 101-112).
     - [https://winnipegtransit.com/routes/customtracker/details?show-routes=FX2,D10,22,223,101](https://winnipegtransit.com/routes/customtracker/details?show-routes=FX2,D10,22,223,101)
 - Show the number of buses on the map, and the number of buses with GPS data.
+
+    ![Bus count](readme-images/bus_count.png)
+
     - For the buses without GPS data, place them in a grid based on their fleet numbers in the southwest of the city outside the service area instead of hiding them. They still contain the same information in their icons and popups as the buses with GPS data.
     - Buses are removed from the grid and placed on the map once they receive GPS data.
+
+    ![Grid of buses without GPS data](readme-images/no_gps_grid.png)
+
 - Add buttons to view a stop's schedule on the next weekday, Saturday, or Sunday, beginning at the start of service. This makes it easier to see full stop schedules without manually changing the date and time.
+
+    ![Stop schedule for next Sunday](readme-images/next_sunday_schedule.png)
 
 ## Installation
 
