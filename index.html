@@ -136,7 +136,7 @@
 
                     let generatedLink = `https://winnipegtransit.com/routes/customtracker/details?show-${trackType}=${trackList}${includeStale ? "" : "&hide-stale-vehicles=true"}`;
                     if (document.querySelector('input[name="device-type"]:checked').value === "mobile") {
-                        generatedLink = `${baseUrl}?r=${encodeURIComponent(generatedLink)}`;
+                        generatedLink = `${baseUrl}?r=${encodeURIComponent(generatedLink).replaceAll("%2C", ",")}`; // Unescape commas for better readability in the URL
                     }
                     document.getElementById("generated-link").innerHTML = `<b>Link:</b> <a href="${generatedLink}" target="_blank">${generatedLink}</a>`;
                 } else {
