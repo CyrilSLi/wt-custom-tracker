@@ -187,7 +187,29 @@
                         displayStatus(`Mobile update required: Please <a href="#mobile-installation">enable&nbsp;ProxyPin</a> and refresh this page. Ignore this message if you are using a desktop browser.`, "red");
                     }
                 } else {
-                    displayStatus("The custom tracker is installed and up to date!", "green");
+                    const patchedAppHeading = "// Start of programmatically updated variables";
+                    const controller = new AbortController();
+                    const res = await fetch(`https://winnipegtransit.com/_expo/static/js/web/${cachedVersion}`, { signal: controller.signal })
+                        .catch(failedStatus);
+                    const reader = res.body.getReader();
+                    const decoder = new TextDecoder("utf-8");
+                    let fetchedAppHeading = "";
+                    while (fetchedAppHeading.length < patchedAppHeading.length) {
+                        const { value, done } = await reader.read();
+                        if (done) {
+                            break;
+                        }
+                        fetchedAppHeading += decoder.decode(value, { stream: true });
+                    }
+                    fetchedAppHeading = fetchedAppHeading.slice(0, patchedAppHeading.length);
+                    await reader.cancel();
+
+                    displayStatus(patchedAppHeading + " vs " + fetchedAppHeading);
+                    if (fetchedAppHeading !== patchedAppHeading) {
+                        displayStatus(`Reinstall required: The unpatched WT web app has been undesirably cached. Please <a href="#mobile-installation">clear your browser data</a> and reinstall the patch.`, "red");
+                    } else {
+                        displayStatus("The custom tracker is installed and up to date!", "green");
+                    }
                 }
 
                 document.getElementById("status-loading").remove();
