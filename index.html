@@ -11,6 +11,24 @@
         #status p:not(:last-child) {
             margin-bottom: 0px;
         }
+        #link-hint-mobile, #link-hint-desktop {
+            display: none;
+        }
+        article:has(#device-mobile:checked) > #link-hint-mobile {
+            display: block;
+        }
+        article:has(#device-desktop:checked) > #link-hint-desktop {
+            display: block;
+        }
+        #track-list:invalid {
+            background-color: lightpink;
+        }
+        #track-list:placeholder-shown {
+            background-color: unset;
+        }
+        #track-list:valid {
+            background-color: lightgreen;
+        }
     </style>
 </head>
 <body>
@@ -23,26 +41,39 @@
             <p id="status-loading">Loading status...</p>
         </article>
         <h2 id="link-generator">Link Generator</h2>
-        <article>
-            <p>Generate a link to track specific vehicles or routes.</p>
-            <label for="track-list">Enter a comma-separated list of vehicle numbers (ranges allowed) or route numbers, for example "123,456-478" or "BLUE,D10,22" </label>
-            <input type="text" id="track-list" placeholder="e.g. 123,456-478 or BLUE,D10,22">
+        <article id="link-generator-form">
+            <label for="track-list">Enter a comma-separated list of vehicle numbers (ranges allowed) or route names to track, for example "123,456-478" or "BLUE,D10,22", or leave blank to track all vehicles (<b>may be very slow</b>):</label>
+            <input type="text" id="track-list" placeholder="e.g. 123,456-478 or BLUE,D10,22" pattern="(\d+-\d+|[0-9A-Za-z]+)(,(\d+-\d+|[0-9A-Za-z]+))*" required>
             <fieldset role="group">
                 <fieldset>
+                    <legend><strong>Track</strong></legend>
                     <label for="track-vehicles">
-                        <input type="radio" name="tracking-type" id="track-vehicles" value="vehicles" checked>
+                        <input type="radio" name="track-type" id="track-vehicles" value="vehicles" checked>
                         Vehicles
                     </label>
                     <label for="track-routes">
-                        <input type="radio" name="tracking-type" id="track-routes" value="routes">
+                        <input type="radio" name="track-type" id="track-routes" value="routes">
                         Routes
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend><strong>Device</strong></legend>
+                    <label for="device-mobile">
+                        <input type="radio" name="device-type" id="device-mobile" value="mobile" checked>
+                        Mobile
+                    </label>
+                    <label for="device-desktop">
+                        <input type="radio" name="device-type" id="device-desktop" value="desktop">
+                        Desktop
                     </label>
                 </fieldset>
                 <label for="include-stale">
                     <input type="checkbox" id="include-stale" checked>
-                    Include vehicles with stale live data?
+                    Include vehicles&nbsp;with stale&nbsp;live&nbsp;data
                 </label>
             </fieldset>
+            <p id="link-hint-mobile"><b>Mobile:</b> The link automatically checks for WT web app updates before redirecting to the app.</p>
+            <p id="link-hint-desktop"><b>Desktop:</b> DevTools and Local Overrides must be enabled in the tab you are pasting the link into.</p>
             <p id="generated-link"></p>
         </article>
         <h2>Readme</h2>
@@ -65,85 +96,117 @@
             displayStatus(error.stack);
         }
 
-        (async () => {
-            let appVersion = fetch("https://winnipegtransit.com")
-                .then(res => res.text())
-                .then(html => {
-                    return new DOMParser().parseFromString(html, "text/html")
-                        .querySelector('script[src*="_expo/static/js/web"]').getAttribute("src") + "?";
-                })
-                .catch(failedStatus);
-
-            let patchVersion = fetch("https://raw.githubusercontent.com/CyrilSLi/wt-custom-tracker/refs/heads/main/index-js-patch.js")
-                .then(res => res.text())
-                .then(js => {
-                    return js.match(/const patchVersion = "(\S+)"/)[1];
-                })
-                .catch(failedStatus);
-
-            [appVersion, patchVersion] = await Promise.all([appVersion, patchVersion]);
-            if (appVersion ===appVersion && patchVersion === patchVersion) {
-                displayStatus("The patch file is up to date!", "green");
-            } else {
-                displayStatus("The patch file is outdated, please contact the developer to update.", "orange");
-            }
-
-            let proxypinActive;
-            const installationCheck = await _epoxyPolyfillOrigFetch("https://winnipegtransit.com/_expo/static/js/web/index-custom-script-installation-check.js?t=" + Date.now())
-                .catch(e => {
-                    displayStatus("ProxyPin is not installed or inactive.", "orange");
-                    proxypinActive = false;
-                });
-            if (proxypinActive !== false) {
-                if (installationCheck.ok && await installationCheck.text() === "OK") {
-                    displayStatus("ProxyPin is installed and active!", "green");
-                    proxypinActive = true;
-                } else {
-                    displayStatus("ProxyPin encountered an error.", "red");
-                    proxypinActive = false;
-                }
-            }
-
-            const cachedVersion = localStorage.getItem("custom-tracker-cached-version");
-            if (cachedVersion !== appVersion) {
-                if (proxypinActive) {
-                    localStorage.setItem("custom-tracker-cached-version", appVersion);
-                    window.location.replace(`https://winnipegtransit.com/?install-redirect=${encodeURIComponent(window.location.href)}`);
-                } else {
-                    displayStatus(`Mobile update required: Please <a href="#mobile-installation">enable&nbsp;ProxyPin</a> and refresh this page. Ignore this message if you are using a desktop browser.`, "red");
-                }
-            } else {
-                displayStatus("The custom tracker is installed and up to date!", "green");
-            }
-
-            document.getElementById("status-loading").remove();
-            const stripVersion = (version) => version.match(/index-(\S+)\./)[1];
-            document.getElementById("status").innerHTML += `
-                <footer>
-                    <small>app&nbsp;${stripVersion(appVersion)}, patch&nbsp;${stripVersion(patchVersion)}${cachedVersion ? `, cached&nbsp;${stripVersion(cachedVersion)}` : ""}</small>
-                </footer>
-            `;
-        })();
-
-        window._epoxyPolyfillOrigFetch("https://raw.githubusercontent.com/CyrilSLi/wt-custom-tracker/refs/heads/main/README.md")
+        const fetchAppVersion = () => fetch("https://winnipegtransit.com")
             .then(res => res.text())
-            .then(res => {
-                const readmeEl = document.getElementById("readme");
-                readmeEl.innerHTML = marked.parse(res);
-                readmeEl.querySelectorAll("h1").forEach(el => el.remove());
-                readmeEl.querySelectorAll("h2, h3").forEach(el => el.id = el.textContent.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, ""));
-                readmeEl.querySelectorAll("a").forEach(el => {
-                    if (el.href.includes(`${window.location.href}#`)) {
-                        el.href = el.href.replace(`${window.location.href}#`, "#");
-                    } else {
-                        el.setAttribute("target", "_blank");
-                    }
-                });
+            .then(html => {
+                return new DOMParser().parseFromString(html, "text/html")
+                    .querySelector('script[src*="_expo/static/js/web"]').getAttribute("src") + "?";
             })
-            .catch(error => {
-                console.error("Error fetching README.md:", error);
-                document.getElementById("readme").innerHTML = "<p>Error loading README.md</p>";
+            .catch(failedStatus);
+
+        const searchParams = new URLSearchParams(window.location.search);
+        const baseUrl = window.location.origin + window.location.pathname;
+
+        if (searchParams.has("r")) {
+            fetchAppVersion().then(appVersion => {
+                const cachedVersion = localStorage.getItem("custom-tracker-cached-version"); // Redirect to status page if update needed, otherwise continue to WT web app
+                const redirectUrl = cachedVersion === appVersion ? decodeURIComponent(searchParams.get("r")) : baseUrl;
+                document.getElementById("status-loading").remove();
+                displayStatus(`Redirecting to <a href="${redirectUrl}" target="_blank">${redirectUrl}</a>...`);
+                window.location.replace(redirectUrl);
             });
+        } else {
+            const generateLink = () => {
+                if (document.getElementById("track-list").value === "" || document.getElementById("track-list").checkValidity()) {
+                    const trackList = document.getElementById("track-list").value;
+                    const trackType = document.querySelector('input[name="track-type"]:checked').value;
+                    const includeStale = document.getElementById("include-stale").checked;
+
+                    let generatedLink = `https://winnipegtransit.com/routes/customtracker/details?show-${trackType}=${trackList}${includeStale ? "" : "&hide-stale-vehicles=true"}`;
+                    if (document.querySelector('input[name="device-type"]:checked').value === "mobile") {
+                        generatedLink = `${baseUrl}?r=${encodeURIComponent(generatedLink)}`;
+                    }
+                    document.getElementById("generated-link").innerHTML = `<b>Link:</b> <a href="${generatedLink}" target="_blank">${generatedLink}</a>`;
+                } else {
+                    document.getElementById("generated-link").innerHTML = "";
+                }
+            };
+            document.getElementById("link-generator-form").addEventListener("input", generateLink);
+            generateLink();
+
+            (async () => {
+                let appVersion = fetchAppVersion();
+                let patchVersion = fetch("https://raw.githubusercontent.com/CyrilSLi/wt-custom-tracker/refs/heads/main/index-js-patch.js")
+                    .then(res => res.text())
+                    .then(js => {
+                        return js.match(/const patchVersion = "(\S+)"/)[1];
+                    })
+                    .catch(failedStatus);
+
+                [appVersion, patchVersion] = await Promise.all([appVersion, patchVersion]);
+                if (appVersion ===appVersion && patchVersion === patchVersion) {
+                    displayStatus("The patch file is up to date!", "green");
+                } else {
+                    displayStatus("The patch file is outdated, please contact the developer to update.", "orange");
+                }
+
+                let proxypinActive;
+                const installationCheck = await _epoxyPolyfillOrigFetch("https://winnipegtransit.com/_expo/static/js/web/index-custom-script-installation-check.js?t=" + Date.now())
+                    .catch(e => {
+                        displayStatus("ProxyPin is not installed or inactive.", "orange");
+                        proxypinActive = false;
+                    });
+                if (proxypinActive !== false) {
+                    if (installationCheck.ok && await installationCheck.text() === "OK") {
+                        displayStatus("ProxyPin is installed and active!", "green");
+                        proxypinActive = true;
+                    } else {
+                        displayStatus("ProxyPin encountered an error.", "red");
+                        proxypinActive = false;
+                    }
+                }
+
+                const cachedVersion = localStorage.getItem("custom-tracker-cached-version");
+                if (cachedVersion !== appVersion) {
+                    if (proxypinActive) {
+                        localStorage.setItem("custom-tracker-cached-version", appVersion);
+                        window.location.replace(`https://winnipegtransit.com/?install-redirect=${encodeURIComponent(window.location.href)}`);
+                    } else {
+                        displayStatus(`Mobile update required: Please <a href="#mobile-installation">enable&nbsp;ProxyPin</a> and refresh this page. Ignore this message if you are using a desktop browser.`, "red");
+                    }
+                } else {
+                    displayStatus("The custom tracker is installed and up to date!", "green");
+                }
+
+                document.getElementById("status-loading").remove();
+                const stripVersion = (version) => version.match(/index-(\S+)\./)[1];
+                document.getElementById("status").innerHTML += `
+                    <footer>
+                        <small>app&nbsp;${stripVersion(appVersion)}, patch&nbsp;${stripVersion(patchVersion)}${cachedVersion ? `, cached&nbsp;${stripVersion(cachedVersion)}` : ""}</small>
+                    </footer>
+                `;
+            })();
+
+            window._epoxyPolyfillOrigFetch("https://raw.githubusercontent.com/CyrilSLi/wt-custom-tracker/refs/heads/main/README.md")
+                .then(res => res.text())
+                .then(res => {
+                    const readmeEl = document.getElementById("readme");
+                    readmeEl.innerHTML = marked.parse(res);
+                    readmeEl.querySelectorAll("h1").forEach(el => el.remove());
+                    readmeEl.querySelectorAll("h2, h3").forEach(el => el.id = el.textContent.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, ""));
+                    readmeEl.querySelectorAll("a").forEach(el => {
+                        if (el.href.includes(`${window.location.href}#`)) {
+                            el.href = el.href.replace(`${window.location.href}#`, "#");
+                        } else {
+                            el.setAttribute("target", "_blank");
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching README.md:", error);
+                    document.getElementById("readme").innerHTML = "<p>Error loading README.md</p>";
+                });
+        }
     </script>
 </body>
 </html>
