@@ -47,11 +47,11 @@ A patch for the Winnipeg Transit web app which improves the functionality of the
     - [https://winnipegtransit.com/routes/customtracker/details?show-routes=BLUE](https://winnipegtransit.com/routes/customtracker/details?show-routes=BLUE): Track all buses on route BLUE (this has little difference compared to the official tracking page for that route).
     - [https://winnipegtransit.com/routes/customtracker/details?show-routes=101,102,103,104,105,106,107,108,109,110,111,112](https://winnipegtransit.com/routes/customtracker/details?show-routes=101,102,103,104,105,106,107,108,109,110,111,112): Track all buses serving On-Request zones (routes 101-112).
     - [https://winnipegtransit.com/routes/customtracker/details?show-routes=FX2,D10,22,223,101](https://winnipegtransit.com/routes/customtracker/details?show-routes=FX2,D10,22,223,101)
-- Show the number of buses on the map, and the number of buses with GPS data.
+- Show the number of buses on the map, and the number of buses without GPS data.
 
     ![Bus count](readme-images/bus_count.png)
 
-    - For the buses without GPS data, place them in a grid based on their fleet numbers in the southwest of the city outside the service area instead of hiding them. They still contain the same information in their icons and popups as the buses with GPS data.
+    - For buses without GPS data, place them in a grid based on their fleet numbers in the southwest of the city outside the service area instead of hiding them. They still contain the same information in their icons and popups as the buses with GPS data.
     - Buses are removed from the grid and placed on the map once they receive GPS data.
 
     ![Grid of buses without GPS data](readme-images/no_gps_grid.png)
